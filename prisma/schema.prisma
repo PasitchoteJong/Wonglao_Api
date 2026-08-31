@@ -13,13 +13,14 @@ datasource db {
 }
 
 model User {
-  Id           String   @id @default(uuid())
-  LineUserId   String   @unique
+  Id           String    @id @default(uuid())
+  LineUserId   String    @unique
   DisplayName  String?
   ProfileImage String
   Email        String?
-  CreatedAt    DateTime @default(now())
-  UpdatedAt    DateTime @updatedAt
+  BirthDay     DateTime?
+  CreatedAt    DateTime  @default(now())
+  UpdatedAt    DateTime  @updatedAt
   QRpayment    String?
   PromptPay    String?
 

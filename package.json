@@ -20,7 +20,10 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "^7.10.0",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "prisma": "7.10.0"
+    "http-errors": "^2.0.1",
+    "prisma": "7.10.0",
+    "zod": "^4.5.4"
   }
 }
