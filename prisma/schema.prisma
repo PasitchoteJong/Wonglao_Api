@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  Id           String   @id @default(uuid())
+  LineUserId   String   @unique
+  DisplayName  String?
+  ProfileImage String
+  Email        String?
+  CreatedAt    DateTime @default(now())
+  UpdatedAt    DateTime @updatedAt
+  QRpayment    String?
+  PromptPay    String?
+
+  Bill       Bill[]
+  Billmember BillMember[]
+}
+
+model Bill {
+  Id                  String            @id @default(uuid())
+  MemberId            String
+  ShopName            String?
+  ReceiptImage        String
+  TotalAmount         Decimal           @db.Decimal(15, 2)
+  MemberAmount        Int
+  StatusReceipt       StatusReceiptType @default(PENDING)
+  ServiceChargeType   Boolean           @default(false)
+  ServiceChargeAmount Int?
+  Vat                 Boolean           @default(false)
+  AcceptedAt          DateTime?
+  CompletedAt         DateTime?
+  CreatedAt           DateTime          @default(now())
+  UpdatedAt           DateTime          @updatedAt
+
+  BillItem    BillItem[]
+  Billmember  BillMember[]
+  PaymentSlip PaymentSlip[]
+
+  user User @relation(fields: [MemberId], references: [Id])
+}
+
+model BillItem {
+  Id        String   @id @default(uuid())
+  BillId    String
+  Name      String
+  Price     Decimal  @db.Decimal(15, 2)
+  Quantity  Int
+  CostTotal Decimal  @db.Decimal(15, 2)
+  CreatedAt DateTime @default(now())
+  UpdatedAt DateTime @updatedAt
+
+  BillItemMember BillItemMember[]
+
+  Bill Bill @relation(fields: [BillId], references: [Id])
+}
+
+model BillMember {
+  Id           String           @id @default(uuid())
+  BillId       String
+  UserId       String
+  DisplayName  String
+  IsAction     Boolean          @default(true)
+  StatusMember StatusMemberType @default(JOINED)
+  StatusPay    StatusPayType    @default(UNPAID)
+  JoinAt       DateTime         @default(now())
+
+  BillItemMember BillItemMember[]
+  PaymentSlip    PaymentSlip[]
+
+  Bill Bill @relation(fields: [BillId], references: [Id])
+  User User @relation(fields: [UserId], references: [Id])
+}
+
+model BillItemMember {
+  Id           String     @id @default(uuid())
+  BillItemId   String
+  BillMemberId String
+  Eating       Boolean    @default(false)
+  BillItem     BillItem   @relation(fields: [BillItemId], references: [Id])
+  BillMember   BillMember @relation(fields: [BillMemberId], references: [Id])
+
+  @@unique([BillItemId, BillMemberId])
+}
+
+model PaymentSlip {
+  Id           String        @id @default(uuid())
+  BillId       String
+  BillMemberId String
+  Amount       Decimal       @db.Decimal(15, 2)
+  StatusPay    StatusPayType @default(UNPAID)
+  ProofImage   String
+  CreatedAt    DateTime      @default(now())
+  Bill         Bill          @relation(fields: [BillId], references: [Id])
+  BillMember   BillMember    @relation(fields: [BillMemberId], references: [Id])
+}
+
+enum StatusReceiptType {
+  PENDING
+  CHECKING
+  COMPLETED
+  CANCLE
+}
+
+enum StatusMemberType {
+  INVITED
+  JOINED
+  LEFT
+}
+
+enum StatusPayType {
+  UNPAID
+  PENDING_VERIFY
+  PAID
+}
