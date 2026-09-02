@@ -1,7 +1,16 @@
+import jwt from "jsonwebtoken";
 import {
     getLineAccessToken,
     getLineProfile
 } from "../services/line.service.js";
+import {
+    findUserByLineId,
+    createUser
+} from "../services/user.service.js";
+import {
+    generateToken,
+    verifyToken
+} from "../utils/jwt.js";
 
 export const lineCallback = async (req, res) => {
     // console.log("callback")
@@ -26,14 +35,37 @@ export const lineCallback = async (req, res) => {
         // console.log("profile from authcontroller:", profile)
 
 
-        return res.json({
-            message: "LINE authentication successful",
-            user: {
-                lineUserId: profile.userId,
-                displayName: profile.displayName,
-                profileImage: profile.pictureURL
+        const user = await findUserByLineId(profile.userId);
+        console.log("User:", user);
+
+        if (user) {
+
+            const payloadToken = {
+                userId: user.Id,
+                lineUserId: user.LineUserId
             }
-        })
+            const token = generateToken(payloadToken, "14d");
+
+
+
+            return res.redirect(
+                `http://localhost:5173/login-success?token=${token}`
+            );
+        }
+        const payloadRegisterToken = {
+            lineUserId: profile.userId,
+            displayName: profile.displayName,
+            profileImage: profile.pictureUrl
+        }
+
+        const registerToken = generateToken(payloadRegisterToken, "10m");
+
+
+
+        return res.redirect(
+            `http://localhost:5173/register-line?token=${registerToken}`
+        )
+
     } catch (error) {
         console.error(
             "LINE Authentication Error:",
@@ -43,6 +75,70 @@ export const lineCallback = async (req, res) => {
             message: "LINE authentication failed"
         });
     }
+};
+
+export const registerLine = async (req, res) => {
+    try {
+        const { registerToken, email, birthDay, promtpay } = req.body;
+        const qrPayment = req.file;
+
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
+
+        if (!registerToken) {
+            return res.status(400).json({
+                message: "Register token is required"
+            })
+        };
+
+        const lineData = verifyToken(registerToken)
+        // const lineData = jwt.verify(registerToken, process.env.JWT_SECRET)
+        console.log("lineData:", lineData)
+
+        if (!qrPayment && !promtpay) {
+            return res.status(400).json({
+                message: "QRPayment or Promtpay is required"
+            })
+        };
+
+        const existingUser = await findUserByLineId(lineData.lineUserId)
+
+        if (existingUser) {
+            return res.status(409).json({
+                message: "User already exists"
+            })
+        };
+
+        const user = await createUser({
+            lineUserId: lineData.lineUserId,
+            displayName: lineData.displayName,
+            profileImage: lineData.profileImage,
+            email,
+            birthDay: new Date(birthDay),
+            qrPayment,
+            promtpay
+        });
+
+        const payloadToken = {
+            userId: user.Id,
+            lineUserId: user.LineUserId
+        }
+        const token = generateToken(payloadToken)
+
+
+        return res.status(201).json({
+            message: "Registration successful",
+            token,
+            user
+        });
+    } catch (error) {
+        console.error("Line Register Error:", error)
+
+        return res.status(500).json({
+            message: "Registration failed"
+        });
+    }
+
 };
 
 

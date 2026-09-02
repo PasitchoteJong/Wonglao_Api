@@ -14,7 +14,7 @@ export const getLineAccessToken = async (code) => {
       client_secret: process.env.LINE_CHANNEL_SECRET,
     }),
     {
-      headers: { "Content-Type": "application/x-www-form-urlencoded", }
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
     }
 
   );
@@ -29,4 +29,3 @@ export const getLineProfile = async (accessToken) => {
   return response.data;
 }
 
-export const getLineUser = async()
