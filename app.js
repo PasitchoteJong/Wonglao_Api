@@ -1,8 +1,10 @@
 import express from 'express';
+import cors from "cors";
 import createHttpError from 'http-errors'
+
+
 import authRoute from './src/routes/auth.routes.js';
 import errorMiddleware from './src/middlewares/error.middleware.js';
-import cors from "cors";
 
 const app = express()
 
@@ -22,5 +24,6 @@ app.use((req, res, next) => {
 })
 
 
-app.use(errorMiddleware)
+app.use(errorMiddleware);
+
 export default app;

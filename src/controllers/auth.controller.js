@@ -82,7 +82,9 @@ export const lineCallback = async (req, res, next) => {
 export const registerLine = async (req, res, next) => {
     try {
         const { registerToken, email, birthDay, promtpay } = req.body;
-        const qrPayment = req.file;
+        const qrPayment = req.file 
+        ?`/uploads/qr/${req.file.filename}`
+        :null;
 
         console.log("BODY:", req.body);
         console.log("FILE:", req.file);
