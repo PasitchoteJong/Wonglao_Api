@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import createHttpError from "http-errors";
 import {
     getLineAccessToken,
     getLineProfile
@@ -12,7 +12,7 @@ import {
     verifyToken
 } from "../utils/jwt.js";
 
-export const lineCallback = async (req, res) => {
+export const lineCallback = async (req, res, next) => {
     // console.log("callback")
     // console.log("Query:", req.query)
 
@@ -38,8 +38,9 @@ export const lineCallback = async (req, res) => {
         const user = await findUserByLineId(profile.userId);
         console.log("User:", user);
 
-        if (user) {
 
+
+        if (user) {
             const payloadToken = {
                 userId: user.Id,
                 lineUserId: user.LineUserId
@@ -52,6 +53,9 @@ export const lineCallback = async (req, res) => {
                 `http://localhost:5173/login-success?token=${token}`
             );
         }
+
+
+
         const payloadRegisterToken = {
             lineUserId: profile.userId,
             displayName: profile.displayName,
@@ -59,8 +63,6 @@ export const lineCallback = async (req, res) => {
         }
 
         const registerToken = generateToken(payloadRegisterToken, "10m");
-
-
 
         return res.redirect(
             `http://localhost:5173/register-line?token=${registerToken}`
@@ -77,7 +79,7 @@ export const lineCallback = async (req, res) => {
     }
 };
 
-export const registerLine = async (req, res) => {
+export const registerLine = async (req, res, next) => {
     try {
         const { registerToken, email, birthDay, promtpay } = req.body;
         const qrPayment = req.file;
@@ -91,8 +93,14 @@ export const registerLine = async (req, res) => {
             })
         };
 
-        const lineData = verifyToken(registerToken)
+        let lineData;
+
+        try{
+            lineData = verifyToken(registerToken)
         // const lineData = jwt.verify(registerToken, process.env.JWT_SECRET)
+        }catch(error){
+            throw createHttpError(401,"Invalid or expired register token")
+        }
         console.log("lineData:", lineData)
 
         if (!qrPayment && !promtpay) {
@@ -109,6 +117,7 @@ export const registerLine = async (req, res) => {
             })
         };
 
+
         const user = await createUser({
             lineUserId: lineData.lineUserId,
             displayName: lineData.displayName,
@@ -119,11 +128,12 @@ export const registerLine = async (req, res) => {
             promtpay
         });
 
+
         const payloadToken = {
             userId: user.Id,
             lineUserId: user.LineUserId
         }
-        const token = generateToken(payloadToken)
+        const token = generateToken(payloadToken,"14d")
 
 
         return res.status(201).json({
@@ -134,9 +144,7 @@ export const registerLine = async (req, res) => {
     } catch (error) {
         console.error("Line Register Error:", error)
 
-        return res.status(500).json({
-            message: "Registration failed"
-        });
+        next(error.status ? error : createHttpError(500,"Registration failed"));
     }
 
 };

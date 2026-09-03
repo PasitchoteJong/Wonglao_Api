@@ -13,4 +13,4 @@ const authRoute = Router()
 authRoute.get('/line/callback', lineCallback);
 authRoute.post('/line/register', uploadQR.single("qrPayment"), registerLine);
 
-export default authRoute
+export default authRoute;
