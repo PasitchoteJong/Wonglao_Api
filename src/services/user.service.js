@@ -8,7 +8,7 @@ export const findUserByLineId = async (lineUserId) => {
     });
 };
 
-export const createUser = async ({ lineUserId, displayName, profileImage, email, birthDay, qrPayment, promtpay }) => {
+export const createUser = async ({ lineUserId, displayName, profileImage, email, birthDay, qrPayment, promptpay }) => {
     return await prisma.user.create({
         data: {
             LineUserId: lineUserId,
@@ -17,7 +17,7 @@ export const createUser = async ({ lineUserId, displayName, profileImage, email,
             Email: email,
             BirthDay: birthDay,
             QRpayment: qrPayment,
-            PromptPay: promtpay
+            PromptPay: promptpay
         }
     });
 };
