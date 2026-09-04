@@ -3,7 +3,7 @@ import {
     lineCallback,
     registerLine
 } from '../controllers/auth.controller.js'
-import uploadQR from '../middlewares/upload.middleware.js';
+import {uploadQR} from '../middlewares/upload.middleware.js';
 
 
 const authRoute = Router()
