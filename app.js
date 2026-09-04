@@ -5,6 +5,8 @@ import createHttpError from 'http-errors'
 
 import authRoute from './src/routes/auth.routes.js';
 import errorMiddleware from './src/middlewares/error.middleware.js';
+import billRoute from './src/routes/bill.routes.js';
+
 
 const app = express()
 
@@ -17,6 +19,8 @@ app.use(cors({
 app.use(express.json())
 
 app.use('/api/auth', authRoute)
+app.use('/api/bill', billRoute)
+
 
 
 app.use((req, res, next) => {
