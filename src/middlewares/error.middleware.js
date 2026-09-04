@@ -1,8 +1,8 @@
-import { ZodError } from "zod";
+// import { ZodError } from "zod";
 
 export default function (err,req,res,next){
     
-    console.error(error);
+    console.error(err);
 
     const statusCode = err.statusCode || 500;
     return res.status(statusCode).json({
