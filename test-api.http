@@ -1,2 +1,86 @@
-Base_URL=http://localhost:8808/api
+@Base_URL=http://localhost:8808/api
+@BillId=08bdce76-5fb0-4514-a5b4-6cf6b5dfb715
 
+### Test Api
+GET http://localhost:8808
+
+
+
+### OCR Receipt
+POST {{Base_URL}}/ocr/receipt
+Content-Type: application/json
+
+{
+    "imagePath":"./uploads/receipts/Receipt.png"
+}
+
+### OCR Seve Bill status Checking
+POST {{Base_URL}}/ocr/bill/{{BillId}}
+Content-Type: application/json
+
+{"shopName": "บริษัท ร้านอาหาร จำกัด",
+    "branch": "สาขา 00001",
+    "receiptNumber": "ธ12-67-0119-00001",
+    "date": "14/3/2566",
+    "time": "20:36:32",
+    "customerName": "เอกวัฒน์ ปูคำ",
+    "items": [
+      {
+        "name": "ผัดเผ็ดเนื้อ",
+        "quantity": 1,
+        "unitPrice": 189,
+        "totalPrice": 189
+      },
+      {
+        "name": "ปลาทอดน้ำปลา",
+        "quantity": 1,
+        "unitPrice": 249,
+        "totalPrice": 249
+      },
+      {
+        "name": "ปลาทับทิมเพิ่ม",
+        "quantity": 1,
+        "unitPrice": 50,
+        "totalPrice": 50
+      },
+      {
+        "name": "ต้มยำทะเลรวม",
+        "quantity": 1,
+        "unitPrice": 249,
+        "totalPrice": 249
+      },
+      {
+        "name": "แสงโสม (กลม)",
+        "quantity": 1,
+        "unitPrice": 389,
+        "totalPrice": 389
+      },
+      {
+        "name": "น้ำเปล่า",
+        "quantity": 2,
+        "unitPrice": 20,
+        "totalPrice": 40
+      },
+      {
+        "name": "โซดา",
+        "quantity": 2,
+        "unitPrice": 29,
+        "totalPrice": 58
+      },
+      {
+        "name": "น้ำแข็ง",
+        "quantity": 1,
+        "unitPrice": 29,
+        "totalPrice": 29
+      },
+      {
+        "name": "เอ็นไก่ทอด 1+1",
+        "quantity": 2,
+        "unitPrice": null,
+        "totalPrice": 129
+      }
+    ],
+    "subtotal": 1382,
+    "vat": 103.56,
+    "totalAmount": 1583
+}

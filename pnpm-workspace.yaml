@@ -1,6 +1,9 @@
 allowBuilds:
+  '@google/genai': true
   '@prisma/engines': true
   esbuild: true
   msgpackr-extract: false
   prisma: true
+  protobufjs: false
+  tesseract.js: true
   workerd: false

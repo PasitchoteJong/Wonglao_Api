@@ -33,12 +33,12 @@ model Bill {
   MemberId            String
   ShopName            String?
   ReceiptImage        String
-  TotalAmount         Decimal           @db.Decimal(15, 2)
-  MemberAmount        Int
+  TotalAmount         Decimal?           @db.Decimal(15, 2)
+  MemberAmount        Int?
   StatusReceipt       StatusReceiptType @default(PENDING)
   ServiceChargeType   Boolean           @default(false)
   ServiceChargeAmount Int?
-  Vat                 Boolean           @default(false)
+  Vat                 Boolean           @default(true)
   AcceptedAt          DateTime?
   CompletedAt         DateTime?
   CreatedAt           DateTime          @default(now())
