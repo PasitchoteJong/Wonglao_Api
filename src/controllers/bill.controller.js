@@ -13,6 +13,9 @@ export const createBill = async (req, res, next) => {
             ? `/uploads/receipts/${req.file.filename}`
             : null;
 
+            // console.log("BODY:",req.body)
+            // console.log("FILE:",req.file)
+
         if (!billName) {
             throw createHttpError(400, "Bill name is required");
         }
@@ -64,6 +67,8 @@ export const createBill = async (req, res, next) => {
     } catch (error) {
         console.error("Create Bill Error:", error);
         next(error.status ? error : createHttpError(500, "Failed to create bill"));
+        // console.error("Verify Bill Error:", error);
+        // next(error.status ? error : createHttpError(500, "Failed to verify bill"));
     }
 }
 
