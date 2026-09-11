@@ -43,7 +43,9 @@ export const lineCallback = async (req, res, next) => {
         if (user) {
             const payloadToken = {
                 userId: user.Id,
-                lineUserId: user.LineUserId
+                lineUserId: user.LineUserId,
+                displayName:user.displayName,
+                profileImage:user.ProfileImage
             }
             const token = generateToken(payloadToken, "14d");
 
