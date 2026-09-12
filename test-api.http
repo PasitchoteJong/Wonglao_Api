@@ -1,12 +1,55 @@
 @Base_URL=http://localhost:8808/api
-@BillId=08bdce76-5fb0-4514-a5b4-6cf6b5dfb715
+@Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMTAxYWNhZS05MmVmLTQ3MTQtYmUzOS04OTc5NjFlM2IzODAiLCJsaW5lVXNlcklkIjoiVEVTVC1VU0VSLTAwMSIsImRpc3BsYXlOYW1lIjoiQm9iYnkiLCJwcm9maWxlSW1hZ2UiOiJodHRwczovL2V4YW1wbGUuY29tL2F2YXRhci5wbmciLCJpYXQiOjE3ODkyMjQ4ODMsImV4cCI6MTc5MDQzNDQ4M30.Xu-W8ALtymyl48L6sXiyll28mHY5wZZc9XhMxHrrcCs
+@LineUserId=TEST-USER-001
+@UserId=3101acae-92ef-4714-be39-897961e3b380
+@BillId=f2959f97-1d46-4409-bf5b-3d11525292ce
 
 ### Test Api
 GET http://localhost:8808
 
 
+### Register-Line   POST/auth/test-register
+POST {{Base_URL}}/auth/test-register
+Content-Type: application/json
 
-### OCR Receipt
+{
+  "lineUserId":"TEST-USER-001",
+  "displayName":"Bobby",
+  "profileImage":"https://example.com/avatar.png",
+  "email":"Addy@mail.Content-MD5",
+  "birthDay":"1995-09-05",
+  "qrPayment":"",
+  "promptpay":"0023456789"
+}
+
+### Test Login   POST/auth/test-login
+POST {{Base_URL}}/auth/test-login
+Content-Type: application/json
+
+{
+  "lineUserId":"{{LineUserId}}"
+}
+
+
+### Create Bill  POST/bills
+POST {{Base_URL}}/bills/
+Authorization: Bearer {{Token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="billName"
+
+Test Restaurant
+--boundary
+Content-Disposition: form-data; name="receiptFile"; filename="Receipt.png"
+Content-Type: image/png
+
+< C:\Pasit\CCW1\WongLao\Backend\uploads\receipts\Receipt.png
+--boundary--
+
+
+
+###  OCR Receipt xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx not use xxxxxxxxxxxx
 POST {{Base_URL}}/ocr/receipt
 Content-Type: application/json
 
@@ -14,7 +57,7 @@ Content-Type: application/json
     "imagePath":"./uploads/receipts/Receipt.png"
 }
 
-### OCR Seve Bill status Checking
+### OCR Seve Bill status Checking   xxxxxxxxxxxxxxxx not use xxxxxxxxxxxx
 POST {{Base_URL}}/ocr/bill/{{BillId}}
 Content-Type: application/json
 
@@ -84,4 +127,15 @@ Content-Type: application/json
     "vat": 103.56,
     "totalAmount": 1583
 }
+
+
+### OCR Bill by billId        POST/ocr/bill/:billId
+POST {{Base_URL}}/ocr/bill/{{BillId}}
+Authorization: Bearer {{Token}}
+
+
+
+
+### Get Bill for join
+GET {{Base_URL}}/jbill/{{BillId}}/join
 

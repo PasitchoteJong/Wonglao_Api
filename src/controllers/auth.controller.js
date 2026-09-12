@@ -44,8 +44,8 @@ export const lineCallback = async (req, res, next) => {
             const payloadToken = {
                 userId: user.Id,
                 lineUserId: user.LineUserId,
-                displayName:user.displayName,
-                profileImage:user.ProfileImage
+                displayName: user.DisplayName,
+                profileImage: user.ProfileImage
             }
             const token = generateToken(payloadToken, "14d");
 
@@ -85,8 +85,8 @@ export const registerLine = async (req, res, next) => {
     try {
         const { registerToken, email, birthDay, promtpay } = req.body;
         const qrPayment = req.file
-        ?`/uploads/qr/${req.file.filename}`
-        :null;
+            ? `/uploads/qr/${req.file.filename}`
+            : null;
 
         console.log("BODY:", req.body);
         console.log("FILE:", req.file);
@@ -99,11 +99,11 @@ export const registerLine = async (req, res, next) => {
 
         let lineData;
 
-        try{
+        try {
             lineData = verifyToken(registerToken)
-        // const lineData = jwt.verify(registerToken, process.env.JWT_SECRET)
-        }catch(error){
-            throw createHttpError(401,"Invalid or expired register token")
+            // const lineData = jwt.verify(registerToken, process.env.JWT_SECRET)
+        } catch (error) {
+            throw createHttpError(401, "Invalid or expired register token")
         }
         console.log("lineData:", lineData)
 
@@ -137,7 +137,7 @@ export const registerLine = async (req, res, next) => {
             userId: user.Id,
             lineUserId: user.LineUserId
         }
-        const token = generateToken(payloadToken,"14d")
+        const token = generateToken(payloadToken, "14d")
 
 
         return res.status(201).json({
@@ -148,10 +148,78 @@ export const registerLine = async (req, res, next) => {
     } catch (error) {
         console.error("Line Register Error:", error)
 
-        next(error.status ? error : createHttpError(500,"Registration failed"));
+        next(error.status ? error : createHttpError(500, "Registration failed"));
     }
 
 };
 
+export const registerTest = async (req, res, next) => {
+    try {
+        const { lineUserId, displayName, profileImage, email, birthDay, qrPayment, promptpay } = req.body;
+
+        const existingUser = await findUserByLineId(lineUserId);
+        if (existingUser) {
+            throw createHttpError(409, "User already exists")
+        }
+
+        const user = await createUser({
+            lineUserId,
+            displayName,
+            profileImage,
+            email,
+            birthDay: birthDay ? new Date(birthDay) : null,
+            qrPayment,
+            promptpay
+        });
+
+        const payloadToken = {
+            userId: user.Id,
+            lineUserId: user.LineUserId,
+            displayName: user.DisplayName,
+            profileImage: user.ProfileImage
+        };
+
+        const token = generateToken(payloadToken, "14d");
+
+        return res.status(201).json({
+            message: "Test register successful",
+            token,
+            user
+        })
+    } catch (error) {
+        next(error);
+    }
 
 
+}
+
+
+export const loginTest = async (req, res, next) => {
+    try {
+        const { lineUserId } = req.body;
+
+        const user = await findUserByLineId(lineUserId);
+
+        if (!user) {
+            throw createHttpError(404, "User not found");
+        }
+
+        const payloadToken = {
+            userId: user.Id,
+            lineUserId: user.LineUserId,
+            displayName: user.DisplayName,
+            profileImage: user.ProfileImage
+        };
+
+        const token = generateToken(payloadToken, "14d");
+
+        return res.status(200).json({
+            message: "Test login successful",
+            token,
+            user
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};

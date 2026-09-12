@@ -21,3 +21,9 @@ export const createUser = async ({ lineUserId, displayName, profileImage, email,
         }
     });
 };
+
+export const getUserById = async (userId) => {
+    return await prisma.user.findUnique({
+        where: { Id: userId }
+    })
+}

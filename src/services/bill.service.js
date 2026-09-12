@@ -3,7 +3,7 @@ import { prisma } from '../../lib/prisma.js'
 export const createBillInDB = async ({ memberId, shopName, receiptImage }) => {
     return await prisma.bill.create({
         data: {
-            MemberId: memberId || "mock-member-id", 
+            MemberId: memberId || "mock-member-id",
             ShopName: shopName,
             ReceiptImage: receiptImage,
             TotalAmount: 0.00,
@@ -63,3 +63,9 @@ export const saveOCRResultToBill = async (billId, data) => {
         });
     });
 };
+
+export const getBillByBillId = async (billId) => {
+    return await prisma.bill.findUnique({
+        where: { Id: billId }
+    })
+}

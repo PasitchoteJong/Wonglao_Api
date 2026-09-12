@@ -1,16 +1,18 @@
 import createHttpError from "http-errors";
 import { createBillInDB, saveOCRResultToBill } from "../services/bill.service.js";
-import { extractTextFromReceipt } from "../services/ocr.service.js";
-import { structureReceiptText } from "../services/gemini.service.js";
+// import { extractTextFromReceipt } from "../services/ocr.service.js";
+// import { structureReceiptText } from "../services/gemini.service.js";
 import { prisma } from "../../lib/prisma.js";
-import path from "path";
+// import path from "path";
 
 /**
  * Create a new bill and automatically process receipt OCR in the background
  */
 export const createBill = async (req, res, next) => {
     try {
+        // console.log(req.body)
         const { billName } = req.body;
+        // console.log(billName)
         const receiptImage = req.file
             ? `/uploads/receipts/${req.file.filename}`
             : null;
@@ -23,44 +25,48 @@ export const createBill = async (req, res, next) => {
             throw createHttpError(400, "Receipt image is required");
         }
 
+        // console.log("REQ.USER =", req.user);
+        // console.log("MEMBER ID =", req.user?.userId);
+
         // 1. Create initial bill record in the database
         const newBill = await createBillInDB({
-            memberId: req.user?.userId || req.user?.id,
+            memberId: req.user?.userId,
             shopName: billName,
             receiptImage: receiptImage,
         });
 
-        // 2. If receipt image exists, process OCR and structure text via Gemini in the background
-        try {
-            const absolutePath = path.join(process.cwd(), receiptImage);
-            const ocrText = await extractTextFromReceipt(absolutePath);
-            
-            if (ocrText) {
-                const structureData = await structureReceiptText(ocrText);
-                
-                // 3. Save OCR results (shop name, total amount, items) to the bill
-                if (structureData) {
-                    await saveOCRResultToBill(newBill.Id, {
-                        shopName: structureData.shopName || billName,
-                        totalAmount: structureData.totalAmount || 0,
-                        items: structureData.items || []
-                    });
-                }
-            }
-        } catch (ocrError) {
-            console.error("Auto OCR Processing Warning:", ocrError);
-            // Skip OCR errors to prevent blocking bill creation
-        }
+        // // 2. If receipt image exists, process OCR and structure text via Gemini in the background
+        // try {
+        //     const absolutePath = path.join(process.cwd(), receiptImage);
+        //     const ocrText = await extractTextFromReceipt(absolutePath);
+
+        //     if (ocrText) {
+        //         const structureData = await structureReceiptText(ocrText);
+
+        //         // 3. Save OCR results (shop name, total amount, items) to the bill
+        //         if (structureData) {
+        //             await saveOCRResultToBill(newBill.Id, {
+        //                 shopName: structureData.shopName || billName,
+        //                 totalAmount: structureData.totalAmount || 0,
+        //                 items: structureData.items || []
+        //             });
+        //         }
+        //     }
+        // } catch (ocrError) {
+        //     console.error("Auto OCR Processing Warning:", ocrError);
+        //     // Skip OCR errors to prevent blocking bill creation
+        // }
 
         // Retrieve the latest bill data including updated OCR items
-        const finalBill = await prisma.bill.findUnique({
-            where: { Id: newBill.Id },
-            include: { BillItem: true }
-        });
+        // const finalBill = await prisma.bill.findUnique({
+        //     where: { Id: newBill.Id },
+        //     include: { BillItem: true }
+        // });
 
         return res.status(201).json({
-            message: "Bill created and processed with OCR",
-            bill: finalBill
+            message: "Bill created successfully",
+            bill: newBill
+            // bill: finalBill
         });
 
     } catch (error) {
@@ -154,7 +160,7 @@ export const getFoodSelection = async (req, res, next) => {
 export const updateFoodSelection = async (req, res, next) => {
     try {
         const { id: billId } = req.params;
-        const { billMemberId, selections } = req.body; 
+        const { billMemberId, selections } = req.body;
 
         if (!billMemberId || !selections || !Array.isArray(selections)) {
             throw createHttpError(400, "Invalid input data: billMemberId and selections array are required");
@@ -192,7 +198,7 @@ export const updateFoodSelection = async (req, res, next) => {
 export const updateBillItems = async (req, res, next) => {
     try {
         const { id: billId } = req.params;
-        const { items } = req.body; 
+        const { items } = req.body;
 
         if (!items || !Array.isArray(items)) {
             throw createHttpError(400, "Items array is required");
