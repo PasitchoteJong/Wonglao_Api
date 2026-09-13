@@ -9,6 +9,7 @@ import billRoute from './src/routes/bill.routes.js';
 import ocrRoute from "./src/routes/ocr.routes.js";
 import joinBillRoute from './src/routes/join-bill.routes.js';
 import splitRoute from './src/routes/split.routes.js'
+import paymentRoute from './src/routes/payment.routes.js';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/bills', billRoute);
 app.use('/api/ocr', ocrRoute);
 app.use('/api/jbill', joinBillRoute)
 app.use('/api/split', splitRoute)
+app.use('/api/payment',paymentRoute)
 
 app.get('/', (req, res) => {
   res.json({

@@ -98,6 +98,46 @@ const uploadReceipt = multer({
   },
 });
 
+// =========================
+// Slip Upload
+// =========================
+
+const slipUploadDir = path.join(
+  backendDir,
+  "uploads",
+  "slips"
+);
+
+if (!fs.existsSync(slipUploadDir)) {
+  fs.mkdirSync(slipUploadDir, { recursive: true });
+}
+
+const slipStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, slipUploadDir);
+  },
+
+  filename: (req, file, cb) => {
+    const extension = path.extname(file.originalname);
+
+    const filename =
+      `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`;
+
+    cb(null, filename);
+  },
+});
+
+const uploadSlip = multer({
+  storage: slipStorage,
+  fileFilter: imageFileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
+
+
+
+
 
 // =========================
 // Export
@@ -106,4 +146,5 @@ const uploadReceipt = multer({
 export {
   uploadQR,
   uploadReceipt,
+  uploadSlip
 };
