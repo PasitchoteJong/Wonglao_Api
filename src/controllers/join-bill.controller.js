@@ -50,7 +50,7 @@ export const getJoinBill = async (req, res, next) => {
     try {
         const { billId } = req.params;
         const bill = await getJoinBillService(billId);
-        if (!bill) { throw createHttpError(400, "Bill not found") }
+        if (!bill) throw createHttpError(400, "Bill not found")
 
         res.status(200).json({
             message: "Get join bill successful",

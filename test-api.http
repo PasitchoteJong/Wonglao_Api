@@ -1,13 +1,21 @@
 @Base_URL=http://localhost:8808/api
-@Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMTAxYWNhZS05MmVmLTQ3MTQtYmUzOS04OTc5NjFlM2IzODAiLCJsaW5lVXNlcklkIjoiVEVTVC1VU0VSLTAwMSIsImRpc3BsYXlOYW1lIjoiQm9iYnkiLCJwcm9maWxlSW1hZ2UiOiJodHRwczovL2V4YW1wbGUuY29tL2F2YXRhci5wbmciLCJpYXQiOjE3ODkyMjQ4ODMsImV4cCI6MTc5MDQzNDQ4M30.Xu-W8ALtymyl48L6sXiyll28mHY5wZZc9XhMxHrrcCs
-@LineUserId=TEST-USER-001
-@UserId=3101acae-92ef-4714-be39-897961e3b380
-@BillId=f2959f97-1d46-4409-bf5b-3d11525292ce
+@Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4MmM2YjlkYy05NmJiLTRiM2QtOTliNS05NDcyNWQ4NzJiZjMiLCJsaW5lVXNlcklkIjoiVTJiNDkyMDgxMGYxMDYxYzEwMWUyYWU3NWQ1ZDhmYTYzIiwiZGlzcGxheU5hbWUiOiJwYXNpdCIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoLWwycDZiYTVja01mQ1cxMTFQY01mVzlaY1NrOGVDdFJZMjlwSWk1Y0tYQXFiREVkTlQ4X0lDTmFLeWNxTURFVFptYzZMSGhlTFhvOVdreGdOeHBLVFgxeFZoTkxiWDFvTW1wVlFtTUlRbmRtY1ZRU1hTdFpmMjV6S1FWQVJ6QVFaeHhUWDJOclhBbEJmbnhEVVRGaFdYSVZTQ3RXVUZ4IiwiaWF0IjoxNzg5MzE2MjQwLCJleHAiOjE3OTA1MjU4NDB9.DA-BC1bL7pYM8idp9R16ZFkAZAkG34aYqBen7gO7704
+@LineUserId=U2b4920810f1061c101e2ae75d5d8fa63
+@UserId=82c6b9dc-96bb-4b3d-99b5-94725d872bf3
+@BillId=8af622c3-510b-4171-a237-a94cb19add60
 
 
-@Token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiOTgwMDgyNC1mNmFjLTQyNjAtODI2YS0zMDA0YWUxYzgzMDYiLCJsaW5lVXNlcklkIjoiVEVTVC1VU0VSLTAwMiIsImRpc3BsYXlOYW1lIjoiQm9iYnkyIiwicHJvZmlsZUltYWdlIjoiaHR0cHM6Ly9leGFtcGxlMi5jb20vYXZhdGFyLnBuZyIsImlhdCI6MTc4OTIzNDE0MywiZXhwIjoxNzkwNDQzNzQzfQ.cgFv8fK0HW6jNzI9LxEdvbVjfxXuSqe2dXuHi-UfUKs
-@LineUserId2=TEST-USER-002
-@UserId2=b9800824-f6ac-4260-826a-3004ae1c8306
+@Token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OWVhZGI1MC0xMjQ0LTQ4ZDgtOTBkYS1iMDE1NmJmNTYxNmMiLCJsaW5lVXNlcklkIjoiVEVTVC1VU0VSLTAxMCIsImRpc3BsYXlOYW1lIjoiQm9iYnkxMCIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vZXhhbXBsZTIuY29tL2F2YXRhci5wbmciLCJpYXQiOjE3ODkzMTYwNjYsImV4cCI6MTc5MDUyNTY2Nn0.fTTS76n-PIpA_AYIScthMXVDdHIR5mKLBUkBTo746Dc
+@LineUserId2=TEST-USER-010
+@UserId2=59eadb50-1244-48d8-90da-b0156bf5616c
+
+@Token3=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjA2YTYyNS02NzRjLTRmNzQtYTk2My0yYTlhYTVkNTg4M2IiLCJsaW5lVXNlcklkIjoiVEVTVC1VU0VSLTAxMSIsImRpc3BsYXlOYW1lIjoiQm9iYnkxMSIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vZXhhbXBsZTIuY29tL2F2YXRhci5wbmciLCJpYXQiOjE3ODkzMTYzMzAsImV4cCI6MTc5MDUyNTkzMH0.sWAfOWpa9RLorFVnNdKYDuFA_X1dHvUEIyX09Zj4I_0
+@LineUserId3=TEST-USER-011
+@UserId3=6206a625-674c-4f74-a963-2a9aa5d5883b
+
+
+@PaymentSlipId=49d4da1a-6c64-4dc9-8d8e-d058fafec427
+
 
 ### Test Api
 GET http://localhost:8808
@@ -18,13 +26,13 @@ POST {{Base_URL}}/auth/test-register
 Content-Type: application/json
 
 {
-  "lineUserId":"TEST-USER-002",
-  "displayName":"Bobby2",
+  "lineUserId":"TEST-USER-011",
+  "displayName":"Bobby11",
   "profileImage":"https://example2.com/avatar.png",
-  "email":"Addy2@mail.com",
+  "email":"Addy11@mail.com",
   "birthDay":"1995-09-06",
   "qrPayment":"",
-  "promptpay":"0023456702"
+  "promptpay":"0023456711"
 }
 
 ### Test Login   POST/auth/test-login
@@ -32,7 +40,7 @@ POST {{Base_URL}}/auth/test-login
 Content-Type: application/json
 
 {
-  "lineUserId":"{{LineUserId2}}"
+  "lineUserId":"{{LineUserId}}"
 }
 
 
@@ -150,7 +158,7 @@ Content-Type: application/json
 
 ### JoinBill        POST/jbill/:billId/join
 POST {{Base_URL}}/jbill/{{BillId}}/join
-Authorization: Bearer {{Token}}
+Authorization: Bearer {{Token3}}
 
 
 ### Get Bill for join
@@ -167,3 +175,39 @@ Content-Type: application/json
 {
   "splitMethod":"EQUAL"
 }
+
+#########################################################################
+### Select share-method
+POST {{Base_URL}}/split/{{BillId}}/equal
+Authorization: Bearer {{Token}}
+
+### Get my payment/me       GET/payment/:billId/me
+GET {{Base_URL}}/payment/{{BillId}}/me
+Authorization: Bearer {{Token}}
+
+
+### Upload Payment Slip
+POST {{Base_URL}}/payment/{{BillId}}/slip
+Authorization: Bearer {{Token}}
+Content-Type: multipart/form-data; boundary=----WongLaoBoundary
+
+------WongLaoBoundary
+Content-Disposition: form-data; name="proofImage"; filename="slip.jpg"
+Content-Type: image/jpeg
+
+< C:\Pasit\CCW1\WongLao\Backend\uploads\slip\09435DA7-D68D-4FCD-8485-FD18D8788A57.jpg
+------WongLaoBoundary--
+
+### Get Pending Payment Slips    GET/payment/:billId/pending
+GET {{Base_URL}}/payment/{{BillId}}/pending
+Authorization: Bearer {{Token}}
+
+
+###GET All bill UnPaid
+GET {{Base_URL}}/payment/summary?page=1&limit=5
+Authorization: Bearer {{Token}}
+
+### Verify Payment Slip
+PATCH {{Base_URL}}/payment/slip/{{PaymentSlipId}}/verify
+Authorization: Bearer {{Token}}
+

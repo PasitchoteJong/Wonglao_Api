@@ -1,5 +1,5 @@
 import createHttpError from "http-errors";
-import { getBillWithJoinedMember, updateBillMembers, updateSplitmethod } from "../services/split.service.js";
+import { getBillMembers, getBillWithJoinedMember, updateBillMembers, updateSplitmethod } from "../services/split.service.js";
 
 
 export const selectSplitMethod = async (req, res, next) => {
@@ -9,11 +9,12 @@ export const selectSplitMethod = async (req, res, next) => {
 
         const allowedMethods = ["EQUAL", "PROPORTIONAL", "ROULETTE"];
 
-        if (!allowedMethods.includes(splitMethod)) {
-            throw createHttpError(400, "Invalid split method")
-        }
+        if (!allowedMethods.includes(splitMethod)) throw createHttpError(400, "Invalid split method")
 
-        const bill = await updateSplitmethod(billId, splitMethod)
+        const members = await getBillMembers(billId);
+        if (!members || members.length === 0) throw createHttpError(400, "No members joined this bill");
+
+        const bill = await updateSplitmethod(billId, splitMethod, members.length)
 
         return res.status(200).json({
             message: "Split method selected successful",
@@ -30,11 +31,11 @@ export const calculateEqual = async (req, res, next) => {
 
         const bill = await getBillWithJoinedMember(billId);
 
-        if (!bill) throw createHttpError(400,"Bill not found");
-        if (!bill.TotalAmount) throw createHttpError(400,"Bill total amount is missing");
+        if (!bill) throw createHttpError(400, "Bill not found");
+        if (!bill.TotalAmount) throw createHttpError(400, "Bill total amount is missing");
 
         const members = bill.Billmember;
-        if (members.length === 0) throw createHttpError(400,"No member joined");
+        if (members.length === 0) throw createHttpError(400, "No member joined");
 
         //cal
         const totalAmount = Number(bill.TotalAmount);

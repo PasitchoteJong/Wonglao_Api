@@ -1,9 +1,21 @@
 import { prisma } from '../../lib/prisma.js'
 
-export const updateSplitmethod = async (billId, splitMethod) => {
+
+export const getBillMembers = async (billId) => {
+    return await prisma.billMember.findMany({
+        where: {
+            BillId: billId,
+            StatusMember: "JOINED"
+        }
+    });
+};
+export const updateSplitmethod = async (billId, splitMethod, memberAmount) => {
     return await prisma.bill.update({
         where: { Id: billId },
-        data: { SplitMethod: splitMethod }
+        data: {
+            SplitMethod: splitMethod,
+            MemberAmount: memberAmount
+        }
     })
 };
 
@@ -24,7 +36,8 @@ export const updateBillMembers = async (member) => {
             prisma.billMember.update({
                 where: { Id: member.Id },
                 data: {
-                    AmountPaid: member.AmountPaid,
+                    AmountToPay: member.AmountToPay,
+                    AmountPaid: 0,
                     StatusPay: "UNPAID"
                 }
             })

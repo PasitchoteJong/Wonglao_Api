@@ -108,6 +108,9 @@ export const verifyBill = async (req, res, next) => {
         const { shopName, totalAmount } = req.body;
         const user = req.user
 
+        // console.log("USER:", req.user);
+        // console.log("BILL ID:", id);
+
         const updatedBill = await saveOCRResultToBill(id, {
             shopName,
             totalAmount: totalAmount ? parseFloat(totalAmount) : 0,
