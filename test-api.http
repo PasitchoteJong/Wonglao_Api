@@ -4,6 +4,11 @@
 @UserId=3101acae-92ef-4714-be39-897961e3b380
 @BillId=f2959f97-1d46-4409-bf5b-3d11525292ce
 
+
+@Token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiOTgwMDgyNC1mNmFjLTQyNjAtODI2YS0zMDA0YWUxYzgzMDYiLCJsaW5lVXNlcklkIjoiVEVTVC1VU0VSLTAwMiIsImRpc3BsYXlOYW1lIjoiQm9iYnkyIiwicHJvZmlsZUltYWdlIjoiaHR0cHM6Ly9leGFtcGxlMi5jb20vYXZhdGFyLnBuZyIsImlhdCI6MTc4OTIzNDE0MywiZXhwIjoxNzkwNDQzNzQzfQ.cgFv8fK0HW6jNzI9LxEdvbVjfxXuSqe2dXuHi-UfUKs
+@LineUserId2=TEST-USER-002
+@UserId2=b9800824-f6ac-4260-826a-3004ae1c8306
+
 ### Test Api
 GET http://localhost:8808
 
@@ -13,13 +18,13 @@ POST {{Base_URL}}/auth/test-register
 Content-Type: application/json
 
 {
-  "lineUserId":"TEST-USER-001",
-  "displayName":"Bobby",
-  "profileImage":"https://example.com/avatar.png",
-  "email":"Addy@mail.Content-MD5",
-  "birthDay":"1995-09-05",
+  "lineUserId":"TEST-USER-002",
+  "displayName":"Bobby2",
+  "profileImage":"https://example2.com/avatar.png",
+  "email":"Addy2@mail.com",
+  "birthDay":"1995-09-06",
   "qrPayment":"",
-  "promptpay":"0023456789"
+  "promptpay":"0023456702"
 }
 
 ### Test Login   POST/auth/test-login
@@ -27,7 +32,7 @@ POST {{Base_URL}}/auth/test-login
 Content-Type: application/json
 
 {
-  "lineUserId":"{{LineUserId}}"
+  "lineUserId":"{{LineUserId2}}"
 }
 
 
@@ -133,9 +138,32 @@ Content-Type: application/json
 POST {{Base_URL}}/ocr/bill/{{BillId}}
 Authorization: Bearer {{Token}}
 
+### Verify bill           PUT/bills/:billId/verify
+PUT {{Base_URL}}/bills/{{BillId}}/verify
+Authorization: Bearer {{Token}}
+Content-Type: application/json
 
+{
+  "shopName": "บริษัท ร้านอาหาร จำกัด",
+  "totalAmount": 1583
+}
+
+### JoinBill        POST/jbill/:billId/join
+POST {{Base_URL}}/jbill/{{BillId}}/join
+Authorization: Bearer {{Token}}
 
 
 ### Get Bill for join
 GET {{Base_URL}}/jbill/{{BillId}}/join
+Authorization: Bearer {{Token}}
 
+
+
+### PATCH selected Split-method      PATCH/split/:billId/split-method
+PATCH {{Base_URL}}/split/{{BillId}}/split-method
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "splitMethod":"EQUAL"
+}

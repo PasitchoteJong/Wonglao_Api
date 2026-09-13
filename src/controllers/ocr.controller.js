@@ -63,7 +63,8 @@ export const saveOCRResult = async (req, res, next) => {
         const updateBill = await saveOCRResultToBill(billId, {
             shopName: structureData.shopName || bill.ShopName,
             totalAmount: structureData.totalAmount || 0,
-            items: structureData.items || []
+            items: structureData.items || [],
+            StatusReceipt: "CHECKING"
         });
 
 

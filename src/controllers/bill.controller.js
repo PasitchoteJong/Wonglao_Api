@@ -3,6 +3,7 @@ import { createBillInDB, saveOCRResultToBill } from "../services/bill.service.js
 // import { extractTextFromReceipt } from "../services/ocr.service.js";
 // import { structureReceiptText } from "../services/gemini.service.js";
 import { prisma } from "../../lib/prisma.js";
+import { createBillmember, getExistingMember } from "../services/joinBill.service.js";
 // import path from "path";
 
 /**
@@ -105,16 +106,31 @@ export const verifyBill = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { shopName, totalAmount } = req.body;
+        const user = req.user
 
         const updatedBill = await saveOCRResultToBill(id, {
             shopName,
             totalAmount: totalAmount ? parseFloat(totalAmount) : 0,
-            items: []
+            items: [],
+            StatusReceipt: "VERIFIED"
         });
 
+        let member;
+        const existingMember = await getExistingMember(id, user.userId)
+        if (!existingMember) {
+            let payloadMember = {
+                billId: id,
+                userId: user.userId,
+                displayName: user.displayName
+            }
+
+            member = await createBillmember(payloadMember)
+        }
+
         return res.status(200).json({
-            message: "Bill verified successfully",
-            bill: updatedBill
+            message: "Bill verified successful",
+            bill: updatedBill,
+            data: member || "You have already joined this bill."
         });
     } catch (error) {
         console.error("Verify Bill Error:", error);

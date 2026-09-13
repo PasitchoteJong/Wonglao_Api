@@ -28,9 +28,32 @@ export const getJoinBillService = async (billId) => {
             TotalAmount: true,
             StatusReceipt: true,
             CreatedAt: true,
+
+            Billmember: {
+                select: {
+                    Id: true,
+                    UserId: true,
+                    DisplayName: true,
+                    StatusMember: true,
+                    JoinAt: true
+                }
+            },
             _count: {
                 select: { Billmember: true }
             }
         }
-    })    
+    })
+}
+
+export const joinBillMember = async ({ billId, userId, displayName }) => {
+    const existingMember = await getExistingMember(billId, userId);
+    if (existingMember) {
+        return existingMember;
+    }
+
+    return await createBillmember({
+        billId,
+        userId,
+        displayName
+    })
 }

@@ -11,6 +11,7 @@ export const createBillInDB = async ({ memberId, shopName, receiptImage }) => {
         }
     })
 }
+
 export const saveOCRResultToBill = async (billId, data) => {
     return await prisma.$transaction(async (tx) => {
 
@@ -33,7 +34,7 @@ export const saveOCRResultToBill = async (billId, data) => {
             data: {
                 ShopName: data.shopName ?? null,
                 TotalAmount: data.totalAmount ?? null,
-                StatusReceipt: "CHECKING"
+                StatusReceipt: data.StatusReceipt ?? "CHECKING"
             }
         });
 
