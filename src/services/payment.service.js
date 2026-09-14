@@ -168,7 +168,13 @@ export const getPaymentSummaryService = async ({ userId, page, limit }) => {
             skip,
             take: limit,
             orderBy: { CreatedAt: "desc" },
-            include: {
+            select: {
+                Id: true,
+                ShopName: true,
+                TotalAmount: true,
+                StatusReceipt: true,
+                CreatedAt: true,
+
                 Billmember: {
                     where: { StatusMember: "JOINED" },
                     select: {
@@ -179,7 +185,6 @@ export const getPaymentSummaryService = async ({ userId, page, limit }) => {
                         AmountPaid: true,
                         StatusPay: true,
                         PaymentAccepted: true,
-                        JoinAt: true,
 
                         PaymentSlip: {
                             orderBy: { CreatedAt: "desc" },
@@ -299,4 +304,36 @@ export const getPaymentMemberDetail = async (billId, billMemberId) => {
         bill,
         member
     };
+};
+
+export const completeBill = async (billId) => {
+    return await prisma.$transaction(async (tx) => {
+
+        const bill = await tx.bill.findUnique({
+            where: { Id: billId },
+            include: {
+                Billmember: {
+                    where: { StatusMember: "JOINED" },
+                    select: {
+                        Id: true,
+                        StatusPay: true,
+                        AmountToPay: true,
+                        AmountPaid: true
+                    }
+                }
+            }
+        });
+
+        if (!bill) return null;
+
+        await tx.bill.update({
+            where: { Id: billId },
+            data: {
+                StatusReceipt: "COMPLETED",
+                CompletedAt: new Date()
+            }
+        });
+
+        return bill;
+    });
 };

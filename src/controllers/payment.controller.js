@@ -1,5 +1,6 @@
 import createHttpError from "http-errors";
 import {
+    completeBill,
     // completeBill,
     // countUnpaidMembers,
     createPaymentSlip,
@@ -285,6 +286,35 @@ export const getPaymentMemberDetailInfo = async (req, res, next) => {
             message: "Payment details retrieved successfully",
             data: detail
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const completePayment = async (req, res, next) => {
+    try {
+        const { billId } = req.params;
+
+        const bill = await getPaymentSummaryBill(billId);
+
+        if (!bill) throw createHttpError(404, "Bill not found");
+
+
+        const members = bill.Billmember;
+
+        const allPaid = members.every(
+            (member) => member.StatusPay === "PAID"
+        );
+
+        if (!allPaid) throw createHttpError(400, "All members must complete payment first");
+
+
+        await completeBill(billId);
+
+        return res.status(200).json({
+            message: "Bill completed successfully"
+        });
+
     } catch (error) {
         next(error);
     }

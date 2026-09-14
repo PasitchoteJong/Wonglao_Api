@@ -193,3 +193,5 @@ export const updateBillItems = async (req, res, next) => {
         next(error.status ? error : createHttpError(500, "Failed to update bill items"));
     }
 };
+
+

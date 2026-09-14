@@ -3,6 +3,7 @@ import { Router } from "express";
 import authMiddleware from "../middlewares/authenticate.middleware.js"
 import { uploadSlip } from "../middlewares/upload.middleware.js"
 import {
+    completePayment,
     getMyPaymentInfo,
     getPaymentMemberDetailInfo,
     getPaymentSummary,
@@ -20,6 +21,6 @@ paymentRoute.get("/:billId/summary", authMiddleware, getPaymentSummaryInfo)
 paymentRoute.get("/:billId/member/:billMemberId", authMiddleware, getPaymentMemberDetailInfo)
 paymentRoute.get("/:billId/pending", authMiddleware, getPendingPaymentSlips)
 paymentRoute.get("/summary", authMiddleware, getPaymentSummary)
-
+paymentRoute.patch("/:billId/complete",authMiddleware,completePayment)
 
 export default paymentRoute;
