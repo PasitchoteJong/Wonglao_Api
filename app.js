@@ -10,6 +10,8 @@ import ocrRoute from "./src/routes/ocr.routes.js";
 import joinBillRoute from './src/routes/join-bill.routes.js';
 import splitRoute from './src/routes/split.routes.js'
 import paymentRoute from './src/routes/payment.routes.js';
+import foodSplittingRoute from './src/routes/food-splitting.route.js';
+import rouletteRoute from './src/routes/roulette.route.js';
 
 const app = express();
 
@@ -26,7 +28,9 @@ app.use('/api/bills', billRoute);
 app.use('/api/ocr', ocrRoute);
 app.use('/api/jbill', joinBillRoute)
 app.use('/api/split', splitRoute)
-app.use('/api/payment',paymentRoute)
+app.use('/api/payment', paymentRoute)
+app.use('/api/foodsplit', foodSplittingRoute)
+app.use('/api/roulette', rouletteRoute)
 
 app.get('/', (req, res) => {
   res.json({

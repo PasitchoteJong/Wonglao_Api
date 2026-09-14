@@ -2,7 +2,7 @@
 @Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4MmM2YjlkYy05NmJiLTRiM2QtOTliNS05NDcyNWQ4NzJiZjMiLCJsaW5lVXNlcklkIjoiVTJiNDkyMDgxMGYxMDYxYzEwMWUyYWU3NWQ1ZDhmYTYzIiwiZGlzcGxheU5hbWUiOiJwYXNpdCIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoLWwycDZiYTVja01mQ1cxMTFQY01mVzlaY1NrOGVDdFJZMjlwSWk1Y0tYQXFiREVkTlQ4X0lDTmFLeWNxTURFVFptYzZMSGhlTFhvOVdreGdOeHBLVFgxeFZoTkxiWDFvTW1wVlFtTUlRbmRtY1ZRU1hTdFpmMjV6S1FWQVJ6QVFaeHhUWDJOclhBbEJmbnhEVVRGaFdYSVZTQ3RXVUZ4IiwiaWF0IjoxNzg5MzE2MjQwLCJleHAiOjE3OTA1MjU4NDB9.DA-BC1bL7pYM8idp9R16ZFkAZAkG34aYqBen7gO7704
 @LineUserId=U2b4920810f1061c101e2ae75d5d8fa63
 @UserId=82c6b9dc-96bb-4b3d-99b5-94725d872bf3
-@BillId=8af622c3-510b-4171-a237-a94cb19add60
+@BillId=48377e3b-7698-46a5-90e3-cacd0639d9a7
 
 
 @Token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OWVhZGI1MC0xMjQ0LTQ4ZDgtOTBkYS1iMDE1NmJmNTYxNmMiLCJsaW5lVXNlcklkIjoiVEVTVC1VU0VSLTAxMCIsImRpc3BsYXlOYW1lIjoiQm9iYnkxMCIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vZXhhbXBsZTIuY29tL2F2YXRhci5wbmciLCJpYXQiOjE3ODkzMTYwNjYsImV4cCI6MTc5MDUyNTY2Nn0.fTTS76n-PIpA_AYIScthMXVDdHIR5mKLBUkBTo746Dc
@@ -14,7 +14,7 @@
 @UserId3=6206a625-674c-4f74-a963-2a9aa5d5883b
 
 
-@PaymentSlipId=49d4da1a-6c64-4dc9-8d8e-d058fafec427
+@PaymentSlipId=3062d70e-e914-4610-90c3-964edf5cb1bf
 
 
 ### Test Api
@@ -177,17 +177,19 @@ Content-Type: application/json
 }
 
 #########################################################################
+@BillId_1=8af622c3-510b-4171-a237-a94cb19add60
+
 ### Select share-method
-POST {{Base_URL}}/split/{{BillId}}/equal
+POST {{Base_URL}}/split/{{BillId_1}}/equal
 Authorization: Bearer {{Token}}
 
 ### Get my payment/me       GET/payment/:billId/me
-GET {{Base_URL}}/payment/{{BillId}}/me
+GET {{Base_URL}}/payment/{{BillId_1}}/me
 Authorization: Bearer {{Token}}
 
 
 ### Upload Payment Slip
-POST {{Base_URL}}/payment/{{BillId}}/slip
+POST {{Base_URL}}/payment/{{BillId_3}}/slip
 Authorization: Bearer {{Token}}
 Content-Type: multipart/form-data; boundary=----WongLaoBoundary
 
@@ -199,7 +201,7 @@ Content-Type: image/jpeg
 ------WongLaoBoundary--
 
 ### Get Pending Payment Slips    GET/payment/:billId/pending
-GET {{Base_URL}}/payment/{{BillId}}/pending
+GET {{Base_URL}}/payment/{{BillId_1}}/pending
 Authorization: Bearer {{Token}}
 
 
@@ -211,3 +213,89 @@ Authorization: Bearer {{Token}}
 PATCH {{Base_URL}}/payment/slip/{{PaymentSlipId}}/verify
 Authorization: Bearer {{Token}}
 
+############################################################
+
+@BillId_2=62ef866e-c945-4329-aed5-9a87ec62065a
+
+### PATCH selected Split-method      PATCH/split/:billId/split-method
+PATCH {{Base_URL}}/split/{{BillId_2}}/split-method
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "splitMethod":"PROPORTIONAL"
+}
+
+### PATCH selected split food   PATCH/foodsplit/:billId/
+PATCH {{Base_URL}}/foodsplit/{{BillId_2}}
+Authorization: Bearer {{Token3}}
+Content-Type: application/json
+
+{
+  "selections":[
+    {
+            "billItemId": "47463347-a876-4df5-9fdd-ac053ac7bf25",
+            "eating": false
+        },
+        {
+            "billItemId": "60c30777-ac90-4238-b507-89bda4b52ad7",
+            "eating": false
+        },
+        {
+            "billItemId": "938711df-4540-4d4f-9367-80573e7eafcd",
+            "eating": true
+        },
+        {
+            "billItemId": "a43b711f-886b-454d-8cae-ed839b952cd4",
+            "eating": true
+        }
+  ]
+}
+
+#### POST Cal share food          POST/foodsplit/:BillId/caluculate
+POST {{Base_URL}}/foodsplit/{{BillId_2}}/calculate
+Authorization: Bearer {{Token}}
+
+
+### GET amount pay for split-food
+GET {{Base_URL}}/foodsplit/{{BillId_2}}/me
+Authorization: Bearer {{Token3}}
+
+### GET food from split-food
+GET {{Base_URL}}/foodsplit/{{BillId_2}}/eatMe
+Authorization: Bearer {{Token}}
+
+
+##############################################################
+
+@BillId_3=48377e3b-7698-46a5-90e3-cacd0639d9a7
+@BillmemberId_1=9c8159d9-72b2-4863-ba0b-1b89bef17927
+@BillmemberId_2=edb729ae-0095-40fa-974d-ef6f3233eb30
+@BillmemberId_3=5cad9bfa-d4a9-430a-ac48-ffb2611039d3
+
+### PATCH selected Split-method      PATCH/split/:billId/split-method
+PATCH {{Base_URL}}/split/{{BillId_3}}/split-method
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "splitMethod":"ROULETTE"
+}
+
+### Get Bill for join
+GET {{Base_URL}}/jbill/{{BillId}}/join
+Authorization: Bearer {{Token}}
+
+
+### PATCH select member for roulette
+PATCH {{Base_URL}}/roulette/{{BillId_3}}/members/{{BillmemberId_3}}/eligibility
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "eligible": true
+}
+
+### Spin Roulette          POST/roulette/:billId/spin
+POST {{Base_URL}}/roulette/{{BillId_3}}/spin
+Authorization: Bearer {{Token}}

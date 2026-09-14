@@ -10,13 +10,28 @@ export const getBillMembers = async (billId) => {
     });
 };
 export const updateSplitmethod = async (billId, splitMethod, memberAmount) => {
-    return await prisma.bill.update({
-        where: { Id: billId },
-        data: {
-            SplitMethod: splitMethod,
-            MemberAmount: memberAmount
+    return await prisma.$transaction(async (tx) => {
+        const bill = await tx.bill.update({
+            where: { Id: billId },
+            data: {
+                SplitMethod: splitMethod,
+                MemberAmount: memberAmount
+            }
+        });
+
+        if (splitMethod === "ROULETTE") {
+            await tx.billMember.updateMany({
+                where: {
+                    BillId: billId,
+                    StatusMember: "JOINED"
+                },
+                data: { RouletteEligible: true }
+            });
         }
+
+        return bill;
     })
+
 };
 
 export const getBillWithJoinedMember = async (billId) => {

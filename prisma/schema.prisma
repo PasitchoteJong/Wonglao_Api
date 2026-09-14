@@ -68,17 +68,18 @@ model BillItem {
 }
 
 model BillMember {
-  Id              String           @id @default(uuid())
-  BillId          String
-  UserId          String
-  DisplayName     String
-  IsAction        Boolean          @default(true)
-  StatusMember    StatusMemberType @default(JOINED)
-  StatusPay       StatusPayType    @default(UNPAID)
-  AmountToPay     Decimal?         @db.Decimal(15, 2)
-  AmountPaid      Decimal          @default(0) @db.Decimal(15, 2)
-  PaymentAccepted Boolean          @default(false)
-  JoinAt          DateTime         @default(now())
+  Id               String           @id @default(uuid())
+  BillId           String
+  UserId           String
+  DisplayName      String
+  IsAction         Boolean          @default(true)
+  StatusMember     StatusMemberType @default(JOINED)
+  StatusPay        StatusPayType    @default(UNPAID)
+  AmountToPay      Decimal?         @db.Decimal(15, 2)
+  AmountPaid       Decimal          @default(0) @db.Decimal(15, 2)
+  RouletteEligible Boolean          @default(false)
+  PaymentAccepted  Boolean          @default(false)
+  JoinAt           DateTime         @default(now())
 
   BillItemMember BillItemMember[]
   PaymentSlip    PaymentSlip[]
