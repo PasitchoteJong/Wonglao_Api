@@ -3,6 +3,7 @@ import authMiddleware from "../middlewares/authenticate.middleware.js"
 import {
     calculateProportionalSplit,
     getFoodSelection,
+    getFoodSelectionStatus,
     getMyFoodSplit,
     getMyFoodSplitForMe,
     updateFoodSelection
@@ -11,7 +12,8 @@ import {
 
 const foodSplittingRoute = Router();
 
-foodSplittingRoute.get("/:billId", authMiddleware, getFoodSelection);
+foodSplittingRoute.get("/:id/status", authMiddleware, getFoodSelectionStatus);
+foodSplittingRoute.get("/:id", authMiddleware, getFoodSelection);
 foodSplittingRoute.patch("/:billId", authMiddleware, updateFoodSelection);
 foodSplittingRoute.post("/:billId/calculate", authMiddleware, calculateProportionalSplit)
 foodSplittingRoute.get("/:billId/me", authMiddleware, getMyFoodSplitForMe)

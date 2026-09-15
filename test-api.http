@@ -2,7 +2,7 @@
 @Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4MmM2YjlkYy05NmJiLTRiM2QtOTliNS05NDcyNWQ4NzJiZjMiLCJsaW5lVXNlcklkIjoiVTJiNDkyMDgxMGYxMDYxYzEwMWUyYWU3NWQ1ZDhmYTYzIiwiZGlzcGxheU5hbWUiOiJwYXNpdCIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoLWwycDZiYTVja01mQ1cxMTFQY01mVzlaY1NrOGVDdFJZMjlwSWk1Y0tYQXFiREVkTlQ4X0lDTmFLeWNxTURFVFptYzZMSGhlTFhvOVdreGdOeHBLVFgxeFZoTkxiWDFvTW1wVlFtTUlRbmRtY1ZRU1hTdFpmMjV6S1FWQVJ6QVFaeHhUWDJOclhBbEJmbnhEVVRGaFdYSVZTQ3RXVUZ4IiwiaWF0IjoxNzg5MzE2MjQwLCJleHAiOjE3OTA1MjU4NDB9.DA-BC1bL7pYM8idp9R16ZFkAZAkG34aYqBen7gO7704
 @LineUserId=U2b4920810f1061c101e2ae75d5d8fa63
 @UserId=82c6b9dc-96bb-4b3d-99b5-94725d872bf3
-@BillId=c48da5aa-17f5-4630-84b2-89478c45885a
+@BillId=a763074f-c793-48bf-8937-2cadaf58cf36
 
 
 @Token2=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OWVhZGI1MC0xMjQ0LTQ4ZDgtOTBkYS1iMDE1NmJmNTYxNmMiLCJsaW5lVXNlcklkIjoiVEVTVC1VU0VSLTAxMCIsImRpc3BsYXlOYW1lIjoiQm9iYnkxMCIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vZXhhbXBsZTIuY29tL2F2YXRhci5wbmciLCJpYXQiOjE3ODkzMTYwNjYsImV4cCI6MTc5MDUyNTY2Nn0.fTTS76n-PIpA_AYIScthMXVDdHIR5mKLBUkBTo746Dc
@@ -215,7 +215,7 @@ Authorization: Bearer {{Token}}
 
 ############################################################
 
-@BillId_2=62ef866e-c945-4329-aed5-9a87ec62065a
+@BillId_2=a763074f-c793-48bf-8937-2cadaf58cf36
 
 ### PATCH selected Split-method      PATCH/split/:billId/split-method
 PATCH {{Base_URL}}/split/{{BillId_2}}/split-method
@@ -234,19 +234,39 @@ Content-Type: application/json
 {
   "selections":[
     {
-            "billItemId": "47463347-a876-4df5-9fdd-ac053ac7bf25",
-            "eating": false
-        },
-        {
-            "billItemId": "60c30777-ac90-4238-b507-89bda4b52ad7",
-            "eating": false
-        },
-        {
-            "billItemId": "938711df-4540-4d4f-9367-80573e7eafcd",
+            "billItemId": "03171a6f-b3f6-4719-90b2-1a9b4214fc9e",
             "eating": true
         },
         {
-            "billItemId": "a43b711f-886b-454d-8cae-ed839b952cd4",
+            "billItemId": "3a832766-12f7-4c43-adee-cd238c05dbd4",
+            "eating": true
+        },
+        {
+            "billItemId": "4a2191b1-b0f9-4ff5-b973-a4f80b0084af",
+            "eating": false
+        },
+        {
+            "billItemId": "724ebb90-400f-43d0-a1bd-220dc9dc5e9e",
+            "eating": false
+        },
+        {
+            "billItemId": "7590d357-dc98-4b3e-9e2f-3bf412f8088a",
+            "eating": false
+        },
+        {
+            "billItemId": "8f03e1c1-804a-45e0-b683-5bde9d0dd418",
+            "eating": true
+        },
+        {
+            "billItemId": "c0335aae-bb38-4903-9c5b-76db9c5667ce",
+            "eating": false
+        },
+        {
+            "billItemId": "d121986a-c5b2-4a42-a7e4-64885837069e",
+            "eating": false
+        },
+        {
+            "billItemId": "e9105158-e110-4388-9f0a-a2b57d3d34a4",
             "eating": true
         }
   ]
@@ -259,7 +279,7 @@ Authorization: Bearer {{Token}}
 
 ### GET amount pay for split-food
 GET {{Base_URL}}/foodsplit/{{BillId_2}}/me
-Authorization: Bearer {{Token3}}
+Authorization: Bearer {{Token}}
 
 ### GET food from split-food
 GET {{Base_URL}}/foodsplit/{{BillId_2}}/eatMe

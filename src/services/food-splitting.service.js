@@ -2,24 +2,19 @@ import { prisma } from '../../lib/prisma.js'
 
 export const getFoodSelectionData = async (billId) => {
     return await prisma.bill.findUnique({
-        where: {
-            Id: billId
-        },
+        where: { Id: billId },
         include: {
             BillItem: {
-                include: {
-                    BillItemMember: true
-                }
+                include: { BillItemMember: true }
             },
-            Billmember: true
+            Billmember: {
+                where: { StatusMember: "JOINED" }
+            }
         }
     });
 };
 
-export const updateFoodSelectionData = async ({
-    billMemberId,
-    selections
-}) => {
+export const updateFoodSelectionData = async ({ billMemberId, selections }) => {
     return await prisma.$transaction(
         selections.map((selection) =>
             prisma.billItemMember.upsert({
@@ -29,9 +24,7 @@ export const updateFoodSelectionData = async ({
                         BillMemberId: billMemberId
                     }
                 },
-                update: {
-                    Eating: selection.eating
-                },
+                update: { Eating: selection.eating },
                 create: {
                     BillItemId: selection.billItemId,
                     BillMemberId: billMemberId,
@@ -44,23 +37,17 @@ export const updateFoodSelectionData = async ({
 
 export const getBillForProportionalCalculation = async (billId) => {
     return await prisma.bill.findUnique({
-        where: {
-            Id: billId
-        },
+        where: { Id: billId },
         include: {
             BillItem: {
                 include: {
                     BillItemMember: {
-                        where: {
-                            Eating: true
-                        }
+                        where: { Eating: true }
                     }
                 }
             },
             Billmember: {
-                where: {
-                    StatusMember: "JOINED"
-                }
+                where: { StatusMember: "JOINED" }
             }
         }
     });
@@ -70,9 +57,7 @@ export const updateMemberAmounts = async (updates) => {
     return await prisma.$transaction(
         updates.map((member) =>
             prisma.billMember.update({
-                where: {
-                    Id: member.memberId
-                },
+                where: { Id: member.memberId },
                 data: {
                     AmountToPay: member.amountToPay,
                     AmountPaid: 0,
