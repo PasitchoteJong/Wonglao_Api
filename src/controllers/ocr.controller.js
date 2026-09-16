@@ -39,7 +39,7 @@ export const saveOCRResult = async (req, res, next) => {
 
         // const data = req.body;
         const bill = await getBillByBillId(billId);
-        console.log("Bill OCR Controller:", bill)
+        // console.log("Bill OCR Controller:", bill)
 
         if (!bill) { throw createHttpError(400, "Bill not found") }
 

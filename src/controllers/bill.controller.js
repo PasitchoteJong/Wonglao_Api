@@ -88,9 +88,7 @@ export const getBillById = async (req, res, next) => {
             include: { BillItem: true }
         });
 
-        if (!bill) {
-            throw createHttpError(404, "Bill not found");
-        }
+        if (!bill) throw createHttpError(404, "Bill not found");
 
         return res.status(200).json({ bill });
     } catch (error) {

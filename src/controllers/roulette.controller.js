@@ -105,10 +105,9 @@ export const spinRoulette = async (req, res, next) => {
                     Id: updatedWinner.Id,
                     UserId: updatedWinner.UserId,
                     DisplayName: updatedWinner.DisplayName,
-                    ProfileImage: updatedWinner.User?.ProfileImage
+                    ProfileImage: updatedWinner.User?.ProfileImage,
+                    AmountToPay: Number(updatedWinner.AmountToPay || 0)
                 }
-
-
             }
         });
 
@@ -133,12 +132,11 @@ export const confirmRoulettePaymentController = async (req, res, next) => {
 
         const amountPaid = Number(winner.AmountToPay);
 
-        const updatedWinner =
-            await confirmRoulettePayment({
-                billId,
-                billMemberId: winner.Id,
-                amountPaid
-            });
+        const updatedWinner = await confirmRoulettePayment({
+            billId,
+            billMemberId: winner.Id,
+            amountPaid
+        });
 
         return res.status(200).json({
             message: "Roulette payment confirmed successfully",
