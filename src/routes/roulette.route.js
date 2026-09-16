@@ -1,22 +1,22 @@
 import { Router } from "express";
 
 import authMiddleware from "../middlewares/authenticate.middleware.js"
+import { billOwnerMiddleware } from "../middlewares/billOwner.middleware.js";
 import {
     confirmRoulettePaymentController,
     getRoulette,
     spinRoulette,
-    updateRouletteEligibility,
-    updateRouletteMember
+    updateRouletteEligibility
 } from "../controllers/roulette.controller.js";
-import { billOwnerMiddleware } from "../middlewares/billOwner.middleware.js";
 
 
 const rouletteRoute = Router();
 
-rouletteRoute.patch("/:billId/members/:billMemberId/eligibility", authMiddleware, updateRouletteEligibility);
-rouletteRoute.patch("/:billId/confirm-payment", authMiddleware, confirmRoulettePaymentController)
 rouletteRoute.get("/:billId", authMiddleware, getRoulette);
+rouletteRoute.patch("/:billId/members/:billMemberId/eligibility", authMiddleware, billOwnerMiddleware, updateRouletteEligibility);
 rouletteRoute.post("/:billId/spin", authMiddleware, billOwnerMiddleware, spinRoulette);
-rouletteRoute.patch("/:billId/members/:memberId", authMiddleware, billOwnerMiddleware, updateRouletteMember);
+rouletteRoute.patch("/:billId/confirm-payment", authMiddleware, billOwnerMiddleware, confirmRoulettePaymentController);
+
+
 
 export default rouletteRoute;

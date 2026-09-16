@@ -43,18 +43,18 @@ export const updateRouletteResult = async ({ billId, winnerId, totalAmount }) =>
             }
         });
 
-        const winner = await tx.billMember.update({
+        return await tx.billMember.update({
             where: { Id: winnerId },
             data: {
                 AmountToPay: totalAmount,
                 AmountPaid: 0,
                 StatusPay: "UNPAID",
                 PaymentAccepted: false
-            }
+            },
+            include: { User: true }
         });
-
-        return winner;
-    });
+    }
+    );
 };
 
 
@@ -63,10 +63,8 @@ export const getRouletteBill = async (billId) => {
         where: { Id: billId },
         include: {
             Billmember: {
-                where: {
-                    StatusMember: "JOINED",
-                    RouletteEligible: true
-                }
+                where: { StatusMember: "JOINED" },
+                include: { User: true }
             }
         }
     });
@@ -94,16 +92,16 @@ export const confirmRoulettePayment = async ({ billId, billMemberId, amountPaid 
         });
 
         return member;
-    });
+    }
+    );
 };
 
 export const getRouletteByBillId = async (billId) => {
-
     return await prisma.bill.findUnique({
         where: { Id: billId },
-
         include: {
-            BillMember: {
+            Billmember: {
+                where: { StatusMember: "JOINED" },
                 include: { User: true }
             }
         }
@@ -112,47 +110,19 @@ export const getRouletteByBillId = async (billId) => {
 
 
 export const getRouletteParticipants = async (billId) => {
-
-    const members = await prisma.billMember.findMany({
+    return await prisma.billMember.findMany({
         where: {
             BillId: billId,
+            StatusMember: "JOINED",
             RouletteEligible: true
         },
-
         include: { User: true }
     });
-
-    return members;
-};
-
-export const submitRouletteToDatabase = async (billId, participants) => {
-
-    return await prisma.roulette.create({
-        data: {
-            BillId: billId,
-            Status: "READY"
-        }
-    });
-};
-
-export const createRouletteSpin = async ({ billId, winnerId }) => {
-
-    return await prisma.roulette.update({
-        where: { BillId: billId },
-
-        data: {
-            WinnerId: winnerId,
-            Status: "COMPLETED"
-        }
-    });
 };
 
 
-export const updateRouletteMemberStatus = async (billId, memberId, isJoined) => {
 
-    return await prisma.billMember.update({
-        where: { Id: memberId },
 
-        data: { isRouletteParticipant: isJoined }
-    });
-};
+
+
+
