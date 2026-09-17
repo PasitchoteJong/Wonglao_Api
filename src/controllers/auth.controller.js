@@ -11,6 +11,10 @@ import {
     generateToken,
     verifyToken
 } from "../utils/jwt.js";
+import {
+    uploadQR,
+    uploadProfileImage
+} from "../services/storage.service.js";
 
 export const lineCallback = async (req, res, next) => {
     // console.log("callback")
@@ -84,9 +88,6 @@ export const lineCallback = async (req, res, next) => {
 export const registerLine = async (req, res, next) => {
     try {
         const { registerToken, email, birthDay, promtpay } = req.body;
-        const qrPayment = req.file
-            ? `/uploads/qr/${req.file.filename}`
-            : null;
 
         console.log("BODY:", req.body);
         console.log("FILE:", req.file);
@@ -121,11 +122,18 @@ export const registerLine = async (req, res, next) => {
             })
         };
 
+        const qrPayment = req.file
+            ? await uploadQR(req.file)
+            : null;
+
+        const profileImage = lineData.profileImage
+            ? await uploadProfileImage(lineData.profileImage)
+            : null;
 
         const user = await createUser({
             lineUserId: lineData.lineUserId,
             displayName: lineData.displayName,
-            profileImage: lineData.profileImage,
+            profileImage,
             email,
             birthDay: new Date(birthDay),
             qrPayment,

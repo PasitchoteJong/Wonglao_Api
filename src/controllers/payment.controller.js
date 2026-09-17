@@ -46,7 +46,7 @@ export const uploadPaymentSlip = async (req, res, next) => {
 
         if (!member.AmountToPay) throw createHttpError(400, "Amount to pay has not been calculated");
 
-        const proofImage = `/uploads/slip/${req.file.filename}`;
+        const proofImage = await uploadPaymentSlip(req.file);
 
         const paymentSlip = await createPaymentSlip({
             billId,

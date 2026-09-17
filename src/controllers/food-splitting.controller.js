@@ -212,15 +212,9 @@ export const calculateProportionalSplit = async (req, res, next) => {
         //     }
         // });
 
-        if (!bill) {
-            throw createHttpError(404, "Bill not found");
-        }
-        if (bill.Billmember.length === 0) {
-            throw createHttpError(
-                400,
-                "No member joined this bill"
-            );
-        }
+        if (!bill) throw createHttpError(404, "Bill not found");
+
+        if (bill.Billmember.length === 0) throw createHttpError(400, "No member joined this bill");
 
         const memberAmounts = {};
 

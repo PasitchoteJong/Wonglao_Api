@@ -26,13 +26,13 @@ POST {{Base_URL}}/auth/test-register
 Content-Type: application/json
 
 {
-  "lineUserId":"TEST-USER-011",
-  "displayName":"Bobby11",
+  "lineUserId":"TEST-USER-016",
+  "displayName":"Bobby16",
   "profileImage":"https://example2.com/avatar.png",
-  "email":"Addy11@mail.com",
+  "email":"Addy16@mail.com",
   "birthDay":"1995-09-06",
   "qrPayment":"",
-  "promptpay":"0023456711"
+  "promptpay":"0023456716"
 }
 
 ### Test Login   POST/auth/test-login
@@ -158,7 +158,7 @@ Content-Type: application/json
 
 ### JoinBill        POST/jbill/:billId/join
 POST {{Base_URL}}/jbill/{{BillId}}/join
-Authorization: Bearer {{Token2}}
+Authorization: Bearer {{Token3}}
 
 
 ### Get Bill for join

@@ -49,12 +49,12 @@ export const saveOCRResult = async (req, res, next) => {
         //     throw createHttpError(400, "Items must be an array");
         // }
 
-        const absolutePath = path.join(
-            process.cwd(),
-            bill.ReceiptImage
-        );
+        // const absolutePath = path.join(
+        //     process.cwd(),
+        //     bill.ReceiptImage
+        // );
 
-        const ocrText = await extractTextFromReceipt(absolutePath);
+        const ocrText = await extractTextFromReceipt(bill.ReceiptImage);
         if (!ocrText) { throw createHttpError(400, "OCR cound not extract text") }
 
         const structureData = await structureReceiptText(ocrText)

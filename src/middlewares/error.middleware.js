@@ -1,12 +1,13 @@
 // import { ZodError } from "zod";
 
-export default function (err,req,res,next){
-    
+export default function (err, req, res, next) {
+
     console.error(err);
 
-    const statusCode = err.statusCode || 500;
-    return res.status(statusCode).json({
-        error: err.name || 'Internal Server Error',
-        message:err.message || 'Something went wrong on the Server.'
+    const statusCode = parseInt(err.statusCode || err.status || 500, 10);
+
+    res.status(isNaN(statusCode) ? 500 : statusCode).json({
+        success: false,
+        message: err.message || 'Internal Server Error',
     });
 }

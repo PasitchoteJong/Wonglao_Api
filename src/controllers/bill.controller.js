@@ -5,6 +5,8 @@ import { createBillInDB, saveOCRResultToBill } from "../services/bill.service.js
 import { prisma } from "../../lib/prisma.js";
 import { createBillmember, getExistingMember } from "../services/joinBill.service.js";
 // import path from "path";
+import { uploadReceipt } from "../services/storage.service.js";
+
 
 /**
  * Create a new bill and automatically process receipt OCR in the background
@@ -14,17 +16,15 @@ export const createBill = async (req, res, next) => {
         // console.log(req.body)
         const { billName } = req.body;
         // console.log(billName)
-        const receiptImage = req.file
-            ? `/uploads/receipts/${req.file.filename}`
-            : null;
+        // const receiptImage = req.file
+        //     ? `/uploads/receipts/${req.file.filename}`
+        //     : null;
 
-        if (!billName) {
-            throw createHttpError(400, "Bill name is required");
-        }
+        if (!billName) throw createHttpError(400, "Bill name is required");
 
-        if (!receiptImage) {
-            throw createHttpError(400, "Receipt image is required");
-        }
+        const receiptImage = await uploadReceipt(req.file);
+        if (!receiptImage) throw createHttpError(400, "Receipt image is required");
+
 
         // console.log("REQ.USER =", req.user);
         // console.log("MEMBER ID =", req.user?.userId);
