@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
     "dev": "node --watch server.js",
+    "build":"prisma generate",
+    "start": "prisma generate && node server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy"
   },
