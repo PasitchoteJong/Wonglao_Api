@@ -210,9 +210,6 @@ importers:
       '@google/genai':
         specifier: ^2.21.0
         version: 2.21.0
-      '@prisma/adapter-mariadb':
-        specifier: ^7.10.0
-        version: 7.10.0
       '@prisma/adapter-pg':
         specifier: ^7.10.0
         version: 7.10.0
@@ -243,9 +240,6 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
-      mariadb:
-        specifier: ^3.5.4
-        version: 3.5.4
       multer:
         specifier: ^2.3.0
         version: 2.3.0
@@ -303,9 +297,6 @@ packages:
     peerDependenciesMeta:
       '@modelcontextprotocol/sdk':
         optional: true
-
-  '@prisma/adapter-mariadb@7.10.0':
-    resolution: {integrity: sha512-n/mNi6/l2V79pNwuvzRlZO+X8dr38eqjx1norvXs3t+bTJkSotxwV40HW0SCSl2vBp/YMfX2w6ZHKePgurf1gw==}
 
   '@prisma/adapter-pg@7.10.0':
     resolution: {integrity: sha512-N7nwSor0HO1Kz6xBv0TPAjAPysKK0fac6p4fVN3ensLOuzc/83Fgmln5k92eK/cvzqdkSR/2kkAqlbcdwVrwpw==}
@@ -1001,10 +992,6 @@ packages:
     resolution: {integrity: sha512-1dhVQZXhcHje7798IVM+xoo/1ZdVfzOMIc8/rgVSijRK38EDqOJoGula9N/8ZI5RD8QTxNQtK/Gozpr+qUqRRA==}
     engines: {node: '>=20.0.0'}
 
-  iconv-lite@0.6.3:
-    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
-    engines: {node: '>=0.10.0'}
-
   iconv-lite@0.7.3:
     resolution: {integrity: sha512-IKXpvIzjnC9XTAUbVBcMfGS0EPaIXtW6v+zr+RRp+hqULEpo0owZax6wyRwPOJbWbzjYspQwusTsfVr0ifh4uQ==}
     engines: {node: '>=0.10.0'}
@@ -1082,27 +1069,12 @@ packages:
   long@5.3.2:
     resolution: {integrity: sha512-mNAgZ1GmyNhD7AuqnTG3/VQ26o760+ZYBPKjPvugO8+nLbYfX6TVpJPseBvopbdY+qpZ/lKUnmEc1LeZYS3QAA==}
 
-  lru-cache@10.4.3:
-    resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
-
-  lru-cache@11.5.2:
-    resolution: {integrity: sha512-4pfM1Ff0x50o0tQwb5ucw/RzNyD0/YJME6IVcStalZuMWxdt3sR3huStTtxz4PUmvZfRguvDejasvQ2kifR11g==}
-    engines: {node: 20 || >=22}
-
   lru.min@1.1.4:
     resolution: {integrity: sha512-DqC6n3QQ77zdFpCMASA1a3Jlb64Hv2N2DciFGkO/4L9+q/IpIAuRlKOvCXabtRW6cQf8usbmM6BE/TOPysCdIA==}
     engines: {bun: '>=1.0.0', deno: '>=1.30.0', node: '>=8.0.0'}
 
   magicast@0.5.4:
     resolution: {integrity: sha512-llBEhWm1SacoRwgHUoQJYtwp4PBLF4faQi5TCpIGyGs9n4y5+juI0tDgyKIfpqxckRHaHzouUEph3THklWh03w==}
-
-  mariadb@3.4.5:
-    resolution: {integrity: sha512-gThTYkhIS5rRqkVr+Y0cIdzr+GRqJ9sA2Q34e0yzmyhMCwyApf3OKAC1jnF23aSlIOqJuyaUFUcj7O1qZslmmQ==}
-    engines: {node: '>= 14'}
-
-  mariadb@3.5.4:
-    resolution: {integrity: sha512-3m0vdfgRkjle5/9hHl4R7rlVvnDA7QfuFSNkdIAQNROWKOS0J3b9IQK9HaZSCGEVKiDUbFXFiINfC+cmR5P/aA==}
-    engines: {node: '>= 20.0.0'}
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -1592,11 +1564,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@prisma/adapter-mariadb@7.10.0':
-    dependencies:
-      '@prisma/driver-adapter-utils': 7.10.0
-      mariadb: 3.4.5
 
   '@prisma/adapter-pg@7.10.0':
     dependencies:
@@ -2386,10 +2353,6 @@ snapshots:
 
   iceberg-js@0.8.1: {}
 
-  iconv-lite@0.6.3:
-    dependencies:
-      safer-buffer: 2.1.2
-
   iconv-lite@0.7.3:
     dependencies:
       safer-buffer: 2.1.2
@@ -2460,10 +2423,6 @@ snapshots:
 
   long@5.3.2: {}
 
-  lru-cache@10.4.3: {}
-
-  lru-cache@11.5.2: {}
-
   lru.min@1.1.4: {}
 
   magicast@0.5.4:
@@ -2472,22 +2431,6 @@ snapshots:
       '@babel/types': 7.29.8
       source-map-js: 1.2.1
     optional: true
-
-  mariadb@3.4.5:
-    dependencies:
-      '@types/geojson': 7946.0.16
-      '@types/node': 24.13.3
-      denque: 2.1.0
-      iconv-lite: 0.6.3
-      lru-cache: 10.4.3
-
-  mariadb@3.5.4:
-    dependencies:
-      '@types/geojson': 7946.0.16
-      '@types/node': 24.13.3
-      denque: 2.1.0
-      iconv-lite: 0.7.3
-      lru-cache: 11.5.2
 
   math-intrinsics@1.1.0: {}
 
