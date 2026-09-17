@@ -56,7 +56,7 @@ export const lineCallback = async (req, res, next) => {
 
 
             return res.redirect(
-                `http://localhost:5173/login-success?token=${token}`
+                `${process.env.FRONTEND_URL}/login-success?token=${token}`
             );
         }
 
@@ -71,7 +71,7 @@ export const lineCallback = async (req, res, next) => {
         const registerToken = generateToken(payloadRegisterToken, "10m");
 
         return res.redirect(
-            `http://localhost:5173/register-line?token=${registerToken}`
+            `${process.env.FRONTEND_URL}/register-line?token=${registerToken}`
         )
 
     } catch (error) {
