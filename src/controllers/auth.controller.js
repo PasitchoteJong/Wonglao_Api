@@ -69,6 +69,7 @@ export const lineCallback = async (req, res, next) => {
         }
 
         const registerToken = generateToken(payloadRegisterToken, "10m");
+        
 
         return res.redirect(
             `${process.env.FRONTEND_URL}/register-line?token=${registerToken}`
