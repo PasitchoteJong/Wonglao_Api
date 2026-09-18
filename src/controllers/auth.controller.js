@@ -75,10 +75,11 @@ export const lineCallback = async (req, res, next) => {
         )
 
     } catch (error) {
-        console.error(
-            "LINE Authentication Error:",
-            error.response?.data || error.message
-        );
+        console.error("LINE Authentication Error:", error);
+        console.error("Error message:", error.message);
+        console.error("Error code:", error.code);
+        console.error("Error meta:", error.meta);
+
         return res.status(500).json({
             message: "LINE authentication failed"
         });
