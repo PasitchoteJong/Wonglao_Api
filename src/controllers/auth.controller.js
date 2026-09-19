@@ -110,24 +110,25 @@ export const registerLine = async (req, res, next) => {
         }
         console.log("lineData:", lineData)
 
-        if (!qrPayment && !promtpay) {
-            return res.status(400).json({
-                message: "QRPayment or Promtpay is required"
-            })
-        };
-
+        
         const existingUser = await findUserByLineId(lineData.lineUserId)
-
+        
         if (existingUser) {
             return res.status(409).json({
                 message: "User already exists"
             })
         };
-
+        
         const qrPayment = req.file
-            ? await uploadQR(req.file)
-            : null;
-
+        ? await uploadQR(req.file)
+        : null;
+        
+        if (!qrPayment && !promtpay) {
+            return res.status(400).json({
+                message: "QRPayment or Promtpay is required"
+            })
+        };
+        
         const profileImage = lineData.profileImage
             ? await uploadProfileImage(lineData.profileImage)
             : null;
