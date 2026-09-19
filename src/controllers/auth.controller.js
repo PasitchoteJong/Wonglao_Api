@@ -69,7 +69,7 @@ export const lineCallback = async (req, res, next) => {
         }
 
         const registerToken = generateToken(payloadRegisterToken, "10m");
-        
+
 
         return res.redirect(
             `${process.env.FRONTEND_URL}/register-line?token=${registerToken}`
@@ -110,25 +110,25 @@ export const registerLine = async (req, res, next) => {
         }
         console.log("lineData:", lineData)
 
-        
+
         const existingUser = await findUserByLineId(lineData.lineUserId)
-        
+
         if (existingUser) {
             return res.status(409).json({
                 message: "User already exists"
             })
         };
-        
+
         const qrPayment = req.file
-        ? await uploadQR(req.file)
-        : null;
-        
+            ? await uploadQR(req.file)
+            : null;
+
         if (!qrPayment && !promtpay) {
             return res.status(400).json({
                 message: "QRPayment or Promtpay is required"
             })
         };
-        
+
         const profileImage = lineData.profileImage
             ? await uploadProfileImage(lineData.profileImage)
             : null;
@@ -146,7 +146,9 @@ export const registerLine = async (req, res, next) => {
 
         const payloadToken = {
             userId: user.Id,
-            lineUserId: user.LineUserId
+            lineUserId: user.LineUserId,
+            displayName: user.DisplayName,
+            profileImage: user.ProfileImage
         }
         const token = generateToken(payloadToken, "14d")
 
