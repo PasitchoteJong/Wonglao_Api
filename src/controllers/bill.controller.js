@@ -1,5 +1,5 @@
 import createHttpError from "http-errors";
-import { createBillInDB, saveOCRResultToBill } from "../services/bill.service.js";
+import { createBillInDB, getBillForVerification, saveOCRResultToBill } from "../services/bill.service.js";
 // import { extractTextFromReceipt } from "../services/ocr.service.js";
 // import { structureReceiptText } from "../services/gemini.service.js";
 import { prisma } from "../../lib/prisma.js";
@@ -16,15 +16,11 @@ export const createBill = async (req, res, next) => {
         // console.log(req.body)
         const { billName } = req.body;
         // console.log(billName)
-        // const receiptImage = req.file
-        //     ? `/uploads/receipts/${req.file.filename}`
-        //     : null;
 
         if (!billName) throw createHttpError(400, "Bill name is required");
 
         const receiptImage = await uploadReceipt(req.file);
         if (!receiptImage) throw createHttpError(400, "Receipt image is required");
-
 
         // console.log("REQ.USER =", req.user);
         // console.log("MEMBER ID =", req.user?.userId);
@@ -109,30 +105,79 @@ export const verifyBill = async (req, res, next) => {
         // console.log("USER:", req.user);
         // console.log("BILL ID:", id);
 
+        const bill = await getBillForVerification(id);
+        if (!bill) throw createHttpError(404, "Bill not found");
+        if (!bill.BillItem || bill.BillItem.length === 0) throw createHttpError(400, "Bill items are required");
+
+
+
+        const itemSubtotal = bill.BillItem.reduce((sum, item) => {
+            return sum + Number(item.CostTotal || 0);
+        }, 0);
+
+        const finalTotal = Number(totalAmount);
+
+        if (itemSubtotal <= 0) throw createHttpError(400, "Bill item subtotal must be greater than 0");
+        if (!finalTotal || finalTotal <= 0) throw createHttpError(400, "Total amount must be greater than 0");
+
+
+
+        const difference = finalTotal - itemSubtotal;
+        const differencePercent = (difference / itemSubtotal) * 100;
+        // ยอดตรงกับรายการอาหาร
+        const sameTotal = Math.abs(difference) <= 0.01;
+        // ยอดสูงกว่าประมาณ VAT 7%
+        const looksLikeVat = differencePercent >= 6.5 && differencePercent <= 7.5;
+
+        if (!sameTotal && !looksLikeVat) {
+            throw createHttpError(
+                400,
+                `Total amount does not match items subtotal. ` +
+                `Items: ฿${itemSubtotal.toFixed(2)}, ` +
+                `Total: ฿${finalTotal.toFixed(2)}`
+            );
+        }
+
+
         const updatedBill = await saveOCRResultToBill(id, {
             shopName,
-            totalAmount: totalAmount ? parseFloat(totalAmount) : 0,
+            totalAmount: finalTotal,
+
+            // ให้ระบบเป็นคนตรวจเอง
+            vat: looksLikeVat,
+
             items: [],
             StatusReceipt: "VERIFIED"
         });
 
         let member;
-        const existingMember = await getExistingMember(id, user.userId)
+        const existingMember = await getExistingMember(id, user.userId);
         if (!existingMember) {
-            let payloadMember = {
+            const payloadMember = {
                 billId: id,
                 userId: user.userId,
                 displayName: user.displayName
-            }
+            };
 
-            member = await createBillmember(payloadMember)
+            member = await createBillmember(payloadMember);
         }
 
         return res.status(200).json({
             message: "Bill verified successful",
+
+            validation: {
+                itemSubtotal: Number(itemSubtotal.toFixed(2)),
+                totalAmount: Number(finalTotal.toFixed(2)),
+                vatDetected: looksLikeVat,
+                differencePercent: Number(
+                    differencePercent.toFixed(2)
+                )
+            },
+
             bill: updatedBill,
             data: member || "You have already joined this bill."
         });
+
     } catch (error) {
         console.error("Verify Bill Error:", error);
         next(error.status ? error : createHttpError(500, "Failed to verify bill"));

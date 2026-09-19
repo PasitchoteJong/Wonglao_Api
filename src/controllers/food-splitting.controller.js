@@ -196,66 +196,146 @@ export const calculateProportionalSplit = async (req, res, next) => {
     try {
         const { billId } = req.params;
 
-        // Fetch bill details, items with their eating members, and all bill members
         const bill = await getBillForProportionalCalculation(billId);
-        // const bill = await prisma.bill.findUnique({
-        //     where: { Id: billId },
-        //     include: {
-        //         BillItem: {
-        //             include: {
-        //                 BillItemMember: {
-        //                     where: { Eating: true }
-        //                 }
-        //             }
-        //         },
-        //         Billmember: true
-        //     }
-        // });
-
         if (!bill) throw createHttpError(404, "Bill not found");
 
         if (bill.Billmember.length === 0) throw createHttpError(400, "No member joined this bill");
 
+        // =========================
+        // 1. หายอดรวมรายการอาหาร
+        // =========================
+        const itemSubtotal = bill.BillItem.reduce(
+            (sum, item) => sum + Number(item.CostTotal || 0),
+            0
+        );
+
+        const finalTotal = Number(bill.TotalAmount || 0);
+        if (itemSubtotal <= 0) throw createHttpError(400, "Bill item subtotal must be greater than 0");
+        if (finalTotal <= 0) throw createHttpError(400, "Bill total amount must be greater than 0");
+
+        // =========================
+        // 2. ตรวจสอบยอดอีกครั้ง
+        // =========================
+        const difference = finalTotal - itemSubtotal;
+        const differencePercent = (difference / itemSubtotal) * 100;
+        const sameTotal = Math.abs(difference) <= 0.01;
+        const looksLikeVat = differencePercent >= 6.5 && differencePercent <= 7.5;
+        if (!sameTotal && !looksLikeVat) throw createHttpError(400, "Bill total does not match item subtotal");
+
+        // =========================
+        // 3. หา factor
+        // =========================
+
+        // ตัวอย่าง
+        // 1000 / 1000 = 1
+        // 1070 / 1000 = 1.07
+        const adjustmentFactor = finalTotal / itemSubtotal;
+
+        // =========================
+        // 4. เตรียมยอดของสมาชิก
+        // =========================
         const memberAmounts = {};
 
         bill.Billmember.forEach((member) => {
             memberAmounts[member.Id] = 0;
         });
 
+        // =========================
+        // 5. กระจายราคาแต่ละรายการ
+        // =========================
         for (const item of bill.BillItem) {
             const eatingMembers = item.BillItemMember;
 
+            const itemTotal = Number(item.CostTotal || 0);
+
+            // ถ้ามี VAT จะถูกกระจายเข้า item
+            const adjustedItemTotal = itemTotal * adjustmentFactor;
+
+            // ไม่มีใครเลือกเมนูนี้
+            // → แชร์ให้สมาชิก JOINED ทุกคนเท่า ๆ กัน
             if (eatingMembers.length === 0) {
+                const amountPerPerson =
+                    adjustedItemTotal / bill.Billmember.length;
+
+                for (const member of bill.Billmember) {
+                    memberAmounts[member.Id] += amountPerPerson;
+                }
+
                 continue;
             }
 
-            const itemTotal = Number(item.CostTotal || 0);
-
-            const amountPerPerson = itemTotal / eatingMembers.length;
+            // มีคนเลือก
+            // → หารเฉพาะคนที่เลือก
+            const amountPerPerson =
+                adjustedItemTotal / eatingMembers.length;
 
             for (const relation of eatingMembers) {
-                if (memberAmounts[relation.BillMemberId] !== undefined) {
+                if (
+                    memberAmounts[relation.BillMemberId] !== undefined
+                ) {
                     memberAmounts[relation.BillMemberId] += amountPerPerson;
                 }
             }
         }
 
+        // =========================
+        // 6. ปัดทศนิยม 2 ตำแหน่ง
+        // =========================
         const updates = bill.Billmember.map((member) => ({
             memberId: member.Id,
-            amountToPay: Number(memberAmounts[member.Id].toFixed(2))
+            amountToPay: Number(
+                memberAmounts[member.Id].toFixed(2)
+            )
         }));
 
+        // =========================
+        // 7. แก้ rounding 0.01
+        // =========================
+        const calculatedTotal = updates.reduce(
+            (sum, member) => sum + member.amountToPay, 0
+        );
+
+        const roundingDifference = Number(
+            (finalTotal - calculatedTotal).toFixed(2)
+        );
+
+        if (roundingDifference !== 0) {
+            // ให้คนที่มียอดสูงสุดรับเศษ rounding
+            const highestMember = updates.reduce(
+                (max, member) =>
+                    member.amountToPay > max.amountToPay
+                        ? member
+                        : max
+            );
+
+            highestMember.amountToPay = Number(
+                (
+                    highestMember.amountToPay +
+                    roundingDifference
+                ).toFixed(2)
+            );
+        }
+
+        // =========================
+        // 8. Update DB
+        // =========================
         const updatedMembers = await updateMemberAmounts(updates);
 
         return res.status(200).json({
             message: "Proportional split calculated successfully",
+            calculation: {
+                itemSubtotal: Number(itemSubtotal.toFixed(2)),
+                finalTotal: Number(finalTotal.toFixed(2)),
+                vatDetected: looksLikeVat,
+                adjustmentFactor: Number(adjustmentFactor.toFixed(4))
+            },
+
             data: updatedMembers
         });
 
     } catch (error) {
-        console.error("Get Bill Summary Error:", error);
+        console.error("Calculate Proportional Split Error:", error);
         next(error);
-        // next(error.status ? error : createHttpError(500, "Failed to calculate bill summary"));
     }
 };
 

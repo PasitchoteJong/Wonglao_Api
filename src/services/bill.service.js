@@ -17,23 +17,19 @@ export const saveOCRResultToBill = async (billId, data) => {
 
         // 1. ตรวจสอบ Bill
         const bill = await tx.bill.findUnique({
-            where: {
-                Id: billId
-            }
+            where: { Id: billId }
         });
 
-        if (!bill) {
-            throw new Error("Bill not found");
-        }
+        if (!bill) throw new Error("Bill not found");
+
 
         // 2. Update Bill
         const updatedBill = await tx.bill.update({
-            where: {
-                Id: billId
-            },
+            where: { Id: billId },
             data: {
                 ShopName: data.shopName ?? null,
                 TotalAmount: data.totalAmount ?? null,
+                Vat: data.vat ?? false,
                 StatusReceipt: data.StatusReceipt ?? "CHECKING"
             }
         });
@@ -55,12 +51,8 @@ export const saveOCRResultToBill = async (billId, data) => {
 
         // 4. Return Bill พร้อม Items
         return await tx.bill.findUnique({
-            where: {
-                Id: billId
-            },
-            include: {
-                BillItem: true
-            }
+            where: { Id: billId },
+            include: { BillItem: true }
         });
     });
 };
@@ -70,3 +62,11 @@ export const getBillByBillId = async (billId) => {
         where: { Id: billId }
     })
 }
+
+
+export const getBillForVerification = async (billId) => {
+    return await prisma.bill.findUnique({
+        where: { Id: billId },
+        include: { BillItem: true }
+    });
+};

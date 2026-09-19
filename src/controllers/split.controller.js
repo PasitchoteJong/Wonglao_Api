@@ -1,5 +1,10 @@
 import createHttpError from "http-errors";
-import { getBillMembers, getBillWithJoinedMember, updateBillMembers, updateSplitmethod } from "../services/split.service.js";
+import {
+    getBillMembers,
+    getBillWithJoinedMember,
+    updateBillMembers,
+    updateSplitmethod
+} from "../services/split.service.js";
 
 
 export const selectSplitMethod = async (req, res, next) => {
