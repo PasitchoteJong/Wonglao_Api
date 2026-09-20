@@ -19,6 +19,7 @@ const uploadImage = multer({
 });
 
 export {
+  uploadImage,
   uploadImage as uploadQR,
   uploadImage as uploadReceipt,
   uploadImage as uploadSlip,

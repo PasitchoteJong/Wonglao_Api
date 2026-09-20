@@ -328,3 +328,30 @@ Complete Bill
 PATCH {{Base_URL}}/payment/{{BillId}}/complete
 Authorization: Bearer {{Token}}
 
+##############################
+
+
+### Dashboard Weekly Expenses
+
+GET {{Base_URL}}/dashboard/weekly-expenses?startDate=2026-09-13
+Authorization: Bearer {{Token}}
+
+
+
+
+###############################
+
+PATCH /api/profile/me
+Content-Type: multipart/form-data
+Authorization: Bearer {{Token}}
+
+
+
+
+###############################
+
+GET /api/profile/me
+
+
+###
+PATCH /api/profile/me

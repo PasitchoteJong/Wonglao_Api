@@ -12,6 +12,8 @@ import splitRoute from './src/routes/split.routes.js'
 import paymentRoute from './src/routes/payment.routes.js';
 import foodSplittingRoute from './src/routes/food-splitting.route.js';
 import rouletteRoute from './src/routes/roulette.route.js';
+import dashboardRoute from './src/routes/dashboard.routes.js';
+import profileRouter from './src/routes/profile.routes.js';
 
 const app = express();
 
@@ -32,6 +34,8 @@ app.use('/api/split', splitRoute)
 app.use('/api/payment', paymentRoute)
 app.use('/api/foodsplit', foodSplittingRoute)
 app.use('/api/roulette', rouletteRoute)
+app.use('/api/dashboard', dashboardRoute)
+app.use('/api/profile', profileRouter)
 
 app.get('/', (req, res) => {
   res.json({
