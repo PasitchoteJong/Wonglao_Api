@@ -1,6 +1,6 @@
 import { Router } from "express";
 import authMiddleware from "../middlewares/authenticate.middleware.js"
-import { billOwnerMiddleware } from "../middlewares/billOwnerMiddleware.js";
+import { billOwnerMiddleware } from "../middlewares/billOwner.middleware.js";
 import {
     getJoinBill,
     joinBill,
